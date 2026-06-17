@@ -18,10 +18,12 @@ max-api-docs/
 ├── protocol/
 │   ├── opcodes.md                         # Полная таблица опкодов
 │   ├── auth.md                            # Аутентификация (INIT, LOGIN)
-│   ├── messaging.md                       # Сообщения (send, delete, history)
-│   ├── chats.md                           # Чаты (список, управление)
+│   ├── messaging.md                       # Сообщения (send, delete, history, search)
+│   ├── chats.md                           # Чаты (список, управление, upload)
 │   ├── contacts.md                        # Контакты и профиль
 │   ├── files.md                           # Загрузка и отправка файлов
+│   ├── calls.md                           # Звонки (история, старт, управление)
+│   ├── presets.md                         # Пресеты (аватары, стикеры, эмодзи)
 │   ├── push.md                            # Push-уведомления
 │   ├── tcp-protocol.md                    # TCP протокол (MessagePack, ver=10)
 │   └── websocket.md                       # WebSocket протокол (JSON, ver=11)
@@ -71,11 +73,20 @@ python3 scripts/tests/tcp_delete.py
 |-------|---------|------------|
 | 6 | INIT | Инициализация сессии |
 | 19 | LOGIN | Авторизация |
+| 25 | GET_PRESET_AVATARS | Пресеты аватаров |
+| 26 | GET_PRESETS | Стикеры, эмодзи, реакции |
 | 49 | GET_HISTORY | История сообщений |
 | 64 | MSG_SEND | Отправка сообщения |
 | 65 | MSG_TYPING | Индикатор печатания |
 | 66 | MSG_DELETE | Удаление сообщения |
 | 67 | MSG_EDIT | Редактирование |
+| 69 | CALL_EDIT | Управление звонком |
+| 70 | FORWARD_MESSAGE | Пересылка сообщения |
+| 73 | SEARCH_MESSAGES | Поиск по сообщениям |
+| 77 | CHAT_OPERATION | Операции с чатами |
+| 78 | CALL_START | Инициализация звонка |
+| 79 | CALL_HISTORY | История звонков |
+| 80 | IMAGE_UPLOAD_URL | URL загрузки изображений |
 | 87 | FILE_UPLOAD | Загрузка файла |
 | 92 | MSG_DELETE_RANGE | Массовое удаление |
 

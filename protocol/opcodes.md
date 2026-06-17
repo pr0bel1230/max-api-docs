@@ -5,10 +5,12 @@
 
 Подробная документация по группам опкодов:
 - [Аутентификация](auth.md) — INIT, LOGIN
-- [Сообщения](messaging.md) — MSG_SEND, MSG_DELETE, GET_HISTORY, GET_MESSAGE
-- [Чаты](chats.md) — GET_CHATS, CHAT_ACTION, GET_STATS
+- [Сообщения](messaging.md) — MSG_SEND, MSG_DELETE, GET_HISTORY, GET_MESSAGE, SEARCH
+- [Чаты](chats.md) — GET_CHATS, CHAT_ACTION, CHAT_OPERATION, GET_STATS, IMAGE_UPLOAD_URL
 - [Контакты](contacts.md) — GET_CONTACTS, профиль
 - [Файлы](files.md) — FILE_UPLOAD, прикрепление файлов
+- [Звонки](calls.md) — CALL_HISTORY, CALL_EDIT, CALL_START
+- [Пресеты](presets.md) — GET_PRESET_AVATARS, GET_PRESETS
 - [Push-уведомления](push.md) — NOTIF_PRESENCE, NOTIF_ATTACH
 
 ## Таблица опкодов
@@ -30,7 +32,9 @@
 | 66 | MSG_DELETE | 1 | [messaging.md](messaging.md) |
 | 67 | MSG_EDIT | 3* | [messaging.md](messaging.md) |
 | 68 | MSG_FWD | 3 | — |
+| 70 | FORWARD_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
+| 73 | SEARCH_MESSAGES | 1 | [messaging.md](messaging.md) |
 | 92 | MSG_DELETE_RANGE | ? | [messaging.md](messaging.md) |
 
 \* — на момент исследования. Возможно, требуется другой payload.
@@ -43,12 +47,31 @@
 | 53 | GET_CHATS | 1 | [chats.md](chats.md) |
 | 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
 | 74 | GET_STATS | 1 | [chats.md](chats.md) |
+| 77 | CHAT_OPERATION | 1 | [chats.md](chats.md) |
 
-### Файлы
+### Файлы и изображения
 
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
+| 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
+
+### Звонки (голосовые и видеозвонки)
+
+| Опкод | Название | cmd | Документация |
+|-------|----------|-----|-------------|
+| 69 | CALL_EDIT | 3* | [calls.md](calls.md) |
+| 78 | CALL_START | 3* | [calls.md](calls.md) |
+| 79 | CALL_HISTORY | 1 | [calls.md](calls.md) |
+
+\* — возвращает ошибку валидации при неполном payload.
+
+### Пресеты (стикеры, эмодзи, аватары)
+
+| Опкод | Название | cmd | Документация |
+|-------|----------|-----|-------------|
+| 25 | GET_PRESET_AVATARS | 1 | [presets.md](presets.md) |
+| 26 | GET_PRESETS | 1 | [presets.md](presets.md) |
 
 ### Push-уведомления (cmd=0)
 
