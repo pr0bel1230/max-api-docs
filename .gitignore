@@ -3,3 +3,4 @@ __pycache__/
 .env
 *.bin
 memory/
+.max_config.json
