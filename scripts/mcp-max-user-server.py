@@ -353,8 +353,6 @@ def max_send_message(chat_id: int | None = None, text: str = "") -> str:
 @mcp.tool()
 def max_delete_message(chat_id: int | None = None, message_id: int = 0, for_me: bool = False) -> str:
     """Удалить сообщение в чате MAX.
-
-    Внимание: использует opcode 66 (MSG_DELETE). Не 65!
     """
     config = load_config()
     cid = chat_id or config.get("default_chat_id")
