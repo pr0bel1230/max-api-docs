@@ -19,14 +19,19 @@
 
 | Опкод | Название | cmd | Payload запроса | Документация |
 |-------|----------|-----|-----------------|-------------|
+| 1 | PING | 1 | `{"interactive": true}` | [push.md](push.md) |
+| 5 | NAV_ANALYTICS | 1 | `{events: [{type: "NAV", event: ...}]}` | — |
 | 6 | INIT | 1 | `{userAgent, deviceId}` | [auth.md](auth.md) |
 | 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | [auth.md](auth.md) |
+| 200 | SERVER_TIME | 1 | — | — |
+| 302 | GET_BANNERS | 1 | `{bannersSync: 0}` | — |
 
 ### Сообщения
 
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 49 | GET_HISTORY | 1 | [messaging.md](messaging.md) |
+| 51 | GET_MEDIA | 1 | [messaging.md](messaging.md) |
 | 64 | MSG_SEND | 1 | [messaging.md](messaging.md) |
 | 65 | MSG_TYPING | 1 | [messaging.md](messaging.md) |
 | 66 | MSG_DELETE | 1 | [messaging.md](messaging.md) |
@@ -38,6 +43,7 @@
 | 92 | CHAT_ACTIVITY | 1 | [chats.md](chats.md) |
 | 178 | MSG_REACT_SET | 1 | [messaging.md](messaging.md) |
 | 179 | MSG_REACT_REMOVE | 1 | [messaging.md](messaging.md) |
+| 180 | GET_REACTIONS_BULK | 1 | [messaging.md](messaging.md) |
 | 181 | GET_REACTIONS | 1 | [messaging.md](messaging.md) |
 
 \* — на момент исследования. Возможно, требуется другой payload.
@@ -47,22 +53,31 @@
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 32 | GET_CONTACTS | 1 | [contacts.md](contacts.md) |
+| 35 | CONTACTS_PRESENCE | 1 | — |
+| 36 | GET_BLOCKED | 1 | — |
+| 48 | GET_CHATS_BULK | 1 | [chats.md](chats.md) |
+| 50 | CHAT_READ | 1 | [chats.md](chats.md) |
 | 53 | GET_CHATS | 1 | [chats.md](chats.md) |
 | 55 | VOID | 1 | [chats.md](chats.md) |
 | 61 | GET_CHAT_INFO | 1 | [chats.md](chats.md) |
 | 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
 | 74 | GET_STATS | 1 | [chats.md](chats.md) |
+| 75 | CHAT_SUBSCRIBE | 1 | [chats.md](chats.md) |
 | 77 | CHAT_OPERATION | 1 | [chats.md](chats.md) |
 | 86 | CHAT_SHOW | 1 | [chats.md](chats.md) |
+| 177 | GET_USERINFO | 1 | — |
+| 198 | GET_COMMON_CHATS | 1 | — |
 | 272 | GET_FOLDERS | 1 | [chats.md](chats.md) |
 
-### Файлы и изображения
+### Файлы, изображения, медиа
 
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
 | 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md) |
+| 83 | GET_VIDEO_URL | 1 | — |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
+| 96 | GET_SESSIONS | 1 | — |
 
 ### Звонки (голосовые и видеозвонки)
 
@@ -80,6 +95,8 @@
 |-------|----------|-----|-------------|
 | 25 | GET_PRESET_AVATARS | 1 | [presets.md](presets.md) |
 | 26 | GET_PRESETS | 1 | [presets.md](presets.md) |
+| 27 | GET_STICKER_SETS | 1 | — |
+| 28 | GET_ANIMOJI | 1 | — |
 
 ### Прочие
 
