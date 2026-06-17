@@ -95,21 +95,44 @@
 ```json
 {
   "chatId": 7268926,
-  "messageId": 116762203424780659,
-  "text": "Новый текст"
+  "messageId": "116766060130147953",
+  "text": "Новый текст сообщения",
+  "elements": [],
+  "attachments": []
 }
 ```
 
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `chatId` | int | ID чата |
+| `messageId` | string | ID сообщения (строка) |
+| `text` | string | Новый текст |
+| `elements` | array | Rich-элементы (обязательно, пустой массив для обычного текста) |
+| `attachments` | array | Вложения (обязательно) |
+
 ### Ответ
 
-На момент исследования опкод возвращал:
-```
-cmd=3
-error: "Empty message can't be send"
+```json
+{
+  "message": {
+    "sender": 3260455,
+    "reactionInfo": {},
+    "updateTime": 1781708687628,
+    "id": "116766060130147953",
+    "time": 1781708681185,
+    "text": "Новый текст сообщения",
+    "type": "USER",
+    "status": "EDITED",
+    "cid": -1781708680996,
+    "attaches": []
+  }
+}
 ```
 
-Возможно, требуется дополнительный payload (например, `elements`).
-Статус: **недокументирован**.
+- Ответ — полный объект сообщения
+- Появляется поле `status: "EDITED"`
+- Появляется поле `updateTime` — timestamp редактирования (отличается от `time`)
+- Поля `elements` и `attachments` в запросе **обязательны** — без них сервер возвращает ошибку
 
 ## MSG_DELETE (opcode 66)
 
@@ -622,7 +645,7 @@ GET_REACTIONS (181) возвращает детальный список `reacti
 |----------|-------|---------|------------|
 | Отправить | 64 | `{chatId, message, notify}` | 1 |
 | Удалить | 66 | `{chatId, messageIds, forMe}` | 1 |
-| Редактировать | 67 | `{chatId, messageId, text}` | 3* |
+| Редактировать | 67 | `{chatId, messageId, text, elements[], attachments[]}` | 1 |
 | Реакция | 178 | `{chatId, messageId, reaction}` | 1 |
 | Снять реакцию | 179 | `{chatId, messageId}` | 1 |
 | Получить реакции (1) | 181 | `{chatId, messageId, count}` | 1 |

@@ -35,7 +35,7 @@
 | 64 | MSG_SEND | 1 | [messaging.md](messaging.md) |
 | 65 | MSG_TYPING | 1 | [messaging.md](messaging.md) |
 | 66 | MSG_DELETE | 1 | [messaging.md](messaging.md) |
-| 67 | MSG_EDIT | 3* | [messaging.md](messaging.md) |
+| 67 | MSG_EDIT | 1 | [messaging.md](messaging.md) |
 | 68 | MSG_FWD | 3 | — |
 | 70 | FORWARD_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
@@ -129,9 +129,9 @@
 содержимое payload. Единственный надёжный способ проверки —
 запросить состояние после операции.
 
-**⚠️ ВАЖНО: MSG_DELETE (66) нестабилен.** При тестировании один запрос
-с одним ID в `messageIds` и `forMe=false` удалил значительно больше
-сообщений, чем ожидалось (несколько недель переписки). Точный механизм
-не установлен. **Никогда не используйте MSG_DELETE с `forMe=false`
-на реальных данных.** Для тестов используйте `forMe=true` и изолированные
-чаты.
+**⚠️ ВАЖНО: MSG_DELETE (66) с `forMe=false` может вызвать каскадное
+удаление** — если перед ним был вызван CHAT_ACTIVITY (92), сервер
+удаляет **все** сообщения до установленного водяного знака, а не
+только указанные в `messageIds`. Подробнее в
+[messaging.md#msg_delete-opcode-66](messaging.md#msg_delete-opcode-66).
+**Никогда не используйте MSG_DELETE с `forMe=false` на реальных чатах.**
