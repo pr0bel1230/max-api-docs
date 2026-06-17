@@ -14,17 +14,23 @@ MAX Messenger — мессенджера, встроенного в экосис
 
 ```
 max-api-docs/
-├── README.md                     # Этот файл
+├── README.md                              # Этот файл
 ├── protocol/
-│   ├── opcodes.md                # Полная таблица опкодов
-│   ├── tcp-protocol.md           # TCP протокол (MessagePack, ver=10)
-│   └── websocket.md              # WebSocket протокол (JSON, ver=11)
+│   ├── opcodes.md                         # Полная таблица опкодов
+│   ├── auth.md                            # Аутентификация (INIT, LOGIN)
+│   ├── messaging.md                       # Сообщения (send, delete, history)
+│   ├── chats.md                           # Чаты (список, управление)
+│   ├── contacts.md                        # Контакты и профиль
+│   ├── files.md                           # Загрузка и отправка файлов
+│   ├── push.md                            # Push-уведомления
+│   ├── tcp-protocol.md                    # TCP протокол (MessagePack, ver=10)
+│   └── websocket.md                       # WebSocket протокол (JSON, ver=11)
 └── scripts/
-    ├── mcp-max-user-server.py    # MCP сервер для AI-ассистентов
+    ├── mcp-max-user-server.py             # MCP сервер для AI-ассистентов
     └── tests/
-        ├── tcp_delete.py         # DELETE-запрос через TCP (opcode 66)
-        ├── delete_variants.py    # Сканирование опкодов
-        └── tcp_raw_test.py       # Дампы INIT/LOGIN
+        ├── tcp_delete.py                  # DELETE-запрос через TCP (opcode 66)
+        ├── delete_variants.py             # Сканирование опкодов
+        └── tcp_raw_test.py                # Дампы INIT/LOGIN
 ```
 
 ## Транспорт

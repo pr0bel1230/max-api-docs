@@ -3,103 +3,67 @@
 Все опкоды протестированы на `api.oneme.ru:443` (TCP, ver=10).
 Совместимы с WebSocket (ver=11, JSON).
 
+Подробная документация по группам опкодов:
+- [Аутентификация](auth.md) — INIT, LOGIN
+- [Сообщения](messaging.md) — MSG_SEND, MSG_DELETE, GET_HISTORY, GET_MESSAGE
+- [Чаты](chats.md) — GET_CHATS, CHAT_ACTION, GET_STATS
+- [Контакты](contacts.md) — GET_CONTACTS, профиль
+- [Файлы](files.md) — FILE_UPLOAD, прикрепление файлов
+- [Push-уведомления](push.md) — NOTIF_PRESENCE, NOTIF_ATTACH
+
 ## Таблица опкодов
 
 ### Системные
 
-| Опкод | Название | cmd | Payload запроса | Примечание |
-|-------|----------|-----|-----------------|------------|
-| 6 | INIT | 1 | `{userAgent, deviceId}` | Всегда первый запрос |
-| 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | Второй; ответ содержит профиль + чаты |
+| Опкод | Название | cmd | Payload запроса | Документация |
+|-------|----------|-----|-----------------|-------------|
+| 6 | INIT | 1 | `{userAgent, deviceId}` | [auth.md](auth.md) |
+| 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | [auth.md](auth.md) |
 
 ### Сообщения
 
-| Опкод | Название | cmd | Payload запроса | Примечание |
-|-------|----------|-----|-----------------|------------|
-| 49 | GET_HISTORY | 1 | `{chatId, backward, forward, from, getChat}` | Возвращает `{messages: [...]}` |
-| 64 | MSG_SEND | 1 | `{chatId, message: {text, cid, elements, attaches}, notify}` | |
-| 65 | MSG_TYPING | 1 | `{chatId}` | Индикатор печатания |
-| 66 | MSG_DELETE | 1 | `{chatId, messageIds: [int], forMe: bool}` | Удаление сообщения |
-| 67 | MSG_EDIT | 3 | `{chatId, messageId, text}` | Error: "Empty message can't be send" |
-| 68 | MSG_FWD | 3 | — | Не тестирован |
-| 71 | GET_MESSAGE | 1 | `{chatId, messageIds: [int]}` | Возвращает полные объекты сообщений |
-| 92 | MSG_DELETE_RANGE | ? | `{chatId, fromId, toId, forMe}` | Массовое удаление |
+| Опкод | Название | cmd | Документация |
+|-------|----------|-----|-------------|
+| 49 | GET_HISTORY | 1 | [messaging.md](messaging.md) |
+| 64 | MSG_SEND | 1 | [messaging.md](messaging.md) |
+| 65 | MSG_TYPING | 1 | [messaging.md](messaging.md) |
+| 66 | MSG_DELETE | 1 | [messaging.md](messaging.md) |
+| 67 | MSG_EDIT | 3* | [messaging.md](messaging.md) |
+| 68 | MSG_FWD | 3 | — |
+| 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
+| 92 | MSG_DELETE_RANGE | ? | [messaging.md](messaging.md) |
+
+\* — на момент исследования. Возможно, требуется другой payload.
 
 ### Чаты и контакты
 
-| Опкод | Название | cmd | Payload запроса |
-|-------|----------|-----|-----------------|
-| 32 | GET_CONTACTS | 1 | `{contactIds: [int]}` |
-| 53 | GET_CHATS | 1 | `{count, marker}` |
-| 72 | CHAT_ACTION | 1 | `{chatId}` |
-| 74 | GET_STATS | 1 | `{chatId}` |
+| Опкод | Название | cmd | Документация |
+|-------|----------|-----|-------------|
+| 32 | GET_CONTACTS | 1 | [contacts.md](contacts.md) |
+| 53 | GET_CHATS | 1 | [chats.md](chats.md) |
+| 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
+| 74 | GET_STATS | 1 | [chats.md](chats.md) |
 
 ### Файлы
 
-| Опкод | Название | cmd | Payload запроса |
-|-------|----------|-----|-----------------|
-| 87 | FILE_UPLOAD | 1 | `{name, size, ext, count}` |
+| Опкод | Название | cmd | Документация |
+|-------|----------|-----|-------------|
+| 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
 
-## Push-уведомления (cmd=0)
+### Push-уведомления (cmd=0)
 
-Приходят от сервера без запроса:
-
-| Опкод | Название | Описание |
-|-------|----------|----------|
-| 132 | NOTIF_PRESENCE | Изменение статуса присутствия пользователя |
-| 136 | NOTIF_ATTACH | Подтверждение загрузки файла |
-| 140 | NOTIF_MSG_DELETE_RANGE | Уведомление о массовом удалении |
-| 142 | NOTIF_MSG_DELETE | Уведомление об удалении сообщения другим пользователем |
-
-## Детали опкодов
-
-### 66 — MSG_DELETE
-
-```
-Запрос:     {chatId: int, messageIds: [int], forMe: bool}
-Ответ:      {chatId: int, messageIds: [int]} (подтверждение)
-Проверка:   GET_HISTORY (opcode 49) — сообщение исчезает из результата
-```
-
-- `messageIds` — массив ID, можно удалять несколько за раз
-- `forMe: false` — удалить у всех участников чата
-- `forMe: true` — удалить только у себя (soft delete)
-- После удаления сообщение полностью отсутствует в ответе GET_HISTORY
-  (не помечается как deleted, а именно исчезает)
-- Удаление уже удалённого сообщения: `cmd=3` (ошибка)
-
-### 71 — GET_MESSAGE
-
-Возвращает полную информацию о сообщении в том виде, как она хранится
-на сервере:
-
-```json
-{
-  "chatId": 7268926,
-  "messages": [{
-    "id": 116762160362694583,
-    "time": 17596280448116,
-    "type": "USER",
-    "sender": 3260455,
-    "cid": 35,
-    "text": "текст сообщения",
-    "attaches": [],
-    "reactionInfo": {}
-  }]
-}
-```
-
-### 65 — MSG_TYPING
-
-Не выполняет никаких действий над сообщениями. Отправляет индикатор
-набора текста другим участникам чата. Всегда возвращает `cmd=1`,
-что может быть ошибочно принято за подтверждение другой операции.
+| Опкод | Название | Описание | Документация |
+|-------|----------|----------|-------------|
+| 132 | NOTIF_PRESENCE | Изменение статуса присутствия | [push.md](push.md) |
+| 136 | NOTIF_ATTACH | Подтверждение загрузки файла | [files.md](files.md) |
+| 140 | NOTIF_MSG_DELETE_RANGE | Уведомление о массовом удалении | [push.md](push.md) |
+| 142 | NOTIF_MSG_DELETE | Уведомление об удалении сообщения | [push.md](push.md) |
 
 ## Коды ответа cmd
 
 | cmd | Значение |
 |-----|----------|
-| 0 | Запрос (клиент → сервер) |
+| 0 | Push-уведомление (сервер → клиент) |
 | 1 | Успешный ответ (ACK) |
 | 3 | Ошибка |
 
