@@ -75,7 +75,8 @@ python3 scripts/tests/tcp_delete.py
 | 19 | LOGIN | Авторизация |
 | 25 | GET_PRESET_AVATARS | Пресеты аватаров |
 | 26 | GET_PRESETS | Стикеры, эмодзи, реакции |
-| 49 | GET_HISTORY | История сообщений |
+| 53 | GET_CHATS | Список чатов |
+| 61 | GET_CHAT_INFO | Информация о чате |
 | 64 | MSG_SEND | Отправка сообщения |
 | 65 | MSG_TYPING | Индикатор печатания |
 | 66 | MSG_DELETE | Удаление сообщения |
@@ -87,8 +88,11 @@ python3 scripts/tests/tcp_delete.py
 | 78 | CALL_START | Инициализация звонка |
 | 79 | CALL_HISTORY | История звонков |
 | 80 | IMAGE_UPLOAD_URL | URL загрузки изображений |
+| 81 | IMAGE_UPLOAD_IUSMILE | URL загрузки (iusmile) |
+| 86 | CHAT_SHOW | Управление отображением чата |
 | 87 | FILE_UPLOAD | Загрузка файла |
-| 92 | MSG_DELETE_RANGE | Массовое удаление |
+| 92 | CHAT_ACTIVITY | Информация о чате за период |
+| 272 | GET_FOLDERS | Папки чатов |
 
 Полная таблица → [protocol/opcodes.md](protocol/opcodes.md)
 

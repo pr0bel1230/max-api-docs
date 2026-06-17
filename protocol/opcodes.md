@@ -35,7 +35,7 @@
 | 70 | FORWARD_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 73 | SEARCH_MESSAGES | 1 | [messaging.md](messaging.md) |
-| 92 | MSG_DELETE_RANGE | ? | [messaging.md](messaging.md) |
+| 92 | CHAT_ACTIVITY | 1 | [chats.md](chats.md) |
 
 \* — на момент исследования. Возможно, требуется другой payload.
 
@@ -45,15 +45,20 @@
 |-------|----------|-----|-------------|
 | 32 | GET_CONTACTS | 1 | [contacts.md](contacts.md) |
 | 53 | GET_CHATS | 1 | [chats.md](chats.md) |
+| 55 | VOID | 1 | [chats.md](chats.md) |
+| 61 | GET_CHAT_INFO | 1 | [chats.md](chats.md) |
 | 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
 | 74 | GET_STATS | 1 | [chats.md](chats.md) |
 | 77 | CHAT_OPERATION | 1 | [chats.md](chats.md) |
+| 86 | CHAT_SHOW | 1 | [chats.md](chats.md) |
+| 272 | GET_FOLDERS | 1 | [chats.md](chats.md) |
 
 ### Файлы и изображения
 
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
+| 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md) |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
 
 ### Звонки (голосовые и видеозвонки)
@@ -72,6 +77,14 @@
 |-------|----------|-----|-------------|
 | 25 | GET_PRESET_AVATARS | 1 | [presets.md](presets.md) |
 | 26 | GET_PRESETS | 1 | [presets.md](presets.md) |
+
+### Прочие
+
+| Опкод | Название | cmd | Документация |
+|-------|----------|-----|-------------|
+| 100 | VOID | 1 | — |
+| 103 | VOID | 1 | — |
+| 200 | SERVER_TIME | 1 | — |
 
 ### Push-уведомления (cmd=0)
 

@@ -4,3 +4,7 @@ __pycache__/
 *.bin
 memory/
 .max_config.json
+
+# Scripts with hardcoded tokens — do not publish
+scripts/find_sasha.py
+scripts/scan_opcodes_v2.py

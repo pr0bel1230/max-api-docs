@@ -163,20 +163,6 @@ error: "Empty message can't be send"
 
 Подробнее в [push.md](push.md).
 
-## MSG_DELETE_RANGE (opcode 92)
-
-Массовое удаление диапазона сообщений. Статус: **не тестирован**.
-
-Предполагаемый payload:
-```json
-{
-  "chatId": 7268926,
-  "fromId": 100,
-  "toId": 200,
-  "forMe": false
-}
-```
-
 ## MSG_TYPING (opcode 65)
 
 Отправка индикатора набора текста. Не выполняет никаких действий
@@ -250,6 +236,16 @@ error: "Empty message can't be send"
 
 Для подгрузки более старых сообщений используйте `from` = timestamp
 самого старого сообщения из предыдущего ответа.
+
+**Важно:** `backward` работает **только в комбинации с `from`**.
+Без поля `from` запрос с `backward > 0` возвращает пустой массив.
+`forward`, напротив, работает без `from` (по умолчанию от `from=0`).
+
+Примеры правильных запросов:
+
+- Последние 30 сообщений: `{from: now_timestamp, backward: 30, forward: 0}`
+- Первые 50 сообщений: `{from: 0, backward: 0, forward: 50}`
+- Вокруг конкретного сообщения: `{from: msg_timestamp, backward: 10, forward: 10}`
 
 ### Удалённые сообщения
 
@@ -376,10 +372,9 @@ error: "Empty message can't be send"
 |----------|-------|---------|------------|
 | Отправить | 64 | `{chatId, message, notify}` | 1 |
 | Удалить | 66 | `{chatId, messageIds, forMe}` | 1 |
-| Удалить диапазон | 92 | `{chatId, fromId, toId, forMe}` | ? |
 | Редактировать | 67 | `{chatId, messageId, text}` | 3* |
 | Печатает | 65 | `{chatId}` | 1 |
-| История | 49 | `{chatId, backward, from, ...}` | 1 |
+| История | 49 | `{chatId, backward, forward, from, ...}` | 1 |
 | Получить сообщение | 71 | `{chatId, messageIds}` | 1 |
 | Поиск | 73 | `{query, count, chatId}` | 1 |
 | Переслать | 70 | `{text, chatId}` | 1 |
