@@ -25,6 +25,7 @@ max-api-docs/
 │   ├── calls.md                           # Звонки (история, старт, управление)
 │   ├── presets.md                         # Пресеты (аватары, стикеры, эмодзи)
 │   ├── push.md                            # Push-уведомления
+│   ├── connection.md                      # Управление сессией (MaxConnection vs probe)
 │   ├── tcp-protocol.md                    # TCP протокол (MessagePack, ver=10)
 │   └── websocket.md                       # WebSocket протокол (JSON, ver=11)
 └── scripts/

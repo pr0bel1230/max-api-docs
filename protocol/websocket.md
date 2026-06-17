@@ -156,6 +156,10 @@ def request(ws, opcode, payload, timeout=15):
             return resp["payload"]
 ```
 
+> **⚠️ Для продакшн-использования используйте [connection.md](connection.md) —**
+> модуль MaxConnection с persistent-соединением, auto-reconnect и seq-матчингом.
+> Код выше — только для понимания wire-протокола.
+
 ## Отличия от TCP
 
 | Аспект | WebSocket (ver=11) | TCP (ver=10) |
