@@ -187,6 +187,72 @@ error: "Empty message can't be send"
 
 Подробнее в [push.md](push.md).
 
+## MSG_REACT_SET (opcode 178)
+
+Поставить реакцию на сообщение.
+
+### Запрос
+
+```json
+{
+  "chatId": 7268926,
+  "messageId": 116765779164748382,
+  "reaction": {
+    "reactionType": "EMOJI",
+    "id": "👍"
+  }
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `chatId` | int | ID чата |
+| `messageId` | int | ID сообщения |
+| `reaction.reactionType` | string | Тип реакции: `EMOJI` |
+| `reaction.id` | string | Эмодзи (Unicode-символ, например `"👍"`, `"😍"`) |
+
+### Ответ
+
+`cmd=1` (ACK). Для проверки используйте GET_MESSAGE (71).
+
+### Push-уведомление
+
+При установке реакции сервер отправляет push **opcode 156** (NOTIF_REACTION):
+
+```json
+{
+  "chatId": 7268926,
+  "messageId": "116765779164748382",
+  "reactionInfo": {
+    "counters": [
+      {"count": 1, "reaction": "👍"},
+      {"count": 1, "reaction": "😍"}
+    ],
+    "yourReaction": "👍",
+    "totalCount": 2
+  }
+}
+```
+
+Поле `yourReaction` присутствует только если реакция поставлена текущим пользователем.
+
+## MSG_REACT_REMOVE (opcode 179)
+
+Снять реакцию с сообщения.
+
+### Запрос
+
+```json
+{
+  "chatId": 7268926,
+  "messageId": 116765779164748382
+}
+```
+
+### Ответ
+
+`cmd=1` (ACK).
+
 ## MSG_TYPING (opcode 65)
 
 Отправка индикатора набора текста. Не выполняет никаких действий
@@ -397,6 +463,8 @@ error: "Empty message can't be send"
 | Отправить | 64 | `{chatId, message, notify}` | 1 |
 | Удалить | 66 | `{chatId, messageIds, forMe}` | 1 |
 | Редактировать | 67 | `{chatId, messageId, text}` | 3* |
+| Реакция | 178 | `{chatId, messageId, reaction}` | 1 |
+| Снять реакцию | 179 | `{chatId, messageId}` | 1 |
 | Печатает | 65 | `{chatId}` | 1 |
 | История | 49 | `{chatId, backward, forward, from, ...}` | 1 |
 | Получить сообщение | 71 | `{chatId, messageIds}` | 1 |

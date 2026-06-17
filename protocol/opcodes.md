@@ -36,6 +36,8 @@
 | 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 73 | SEARCH_MESSAGES | 1 | [messaging.md](messaging.md) |
 | 92 | CHAT_ACTIVITY | 1 | [chats.md](chats.md) |
+| 178 | MSG_REACT_SET | 1 | [messaging.md](messaging.md) |
+| 179 | MSG_REACT_REMOVE | 1 | [messaging.md](messaging.md) |
 
 \* — на момент исследования. Возможно, требуется другой payload.
 
@@ -94,6 +96,7 @@
 | 136 | NOTIF_ATTACH | Подтверждение загрузки файла | [files.md](files.md) |
 | 140 | NOTIF_MSG_DELETE_RANGE | Уведомление о массовом удалении | [push.md](push.md) |
 | 142 | NOTIF_MSG_DELETE | Уведомление об удалении сообщения | [push.md](push.md) |
+| 156 | NOTIF_REACTION | Уведомление о реакции на сообщение | [messaging.md](messaging.md) |
 
 ## Коды ответа cmd
 
