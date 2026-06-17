@@ -128,7 +128,7 @@ error: "Empty message can't be send"
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `chatId` | int | ID чата |
-| `messageIds` | array[int] | Массив ID сообщений для удаления |
+| `messageIds` | array[int/string] | Массив ID сообщений для удаления |
 | `forMe` | bool | `false` — удалить у всех, `true` — только у себя |
 
 ### Ответ
