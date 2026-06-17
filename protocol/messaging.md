@@ -253,6 +253,69 @@ error: "Empty message can't be send"
 
 `cmd=1` (ACK).
 
+## GET_REACTIONS (opcode 181)
+
+Получение списка реакций на сообщение с указанием, кто поставил.
+
+### Запрос
+
+```json
+{
+  "chatId": 7268926,
+  "messageId": "116765779164748382",
+  "count": 100
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `chatId` | int | ID чата (может быть отрицательным при unsigned overflow) |
+| `messageId` | string | ID сообщения (строка) |
+| `count` | int | Количество реакций в ответе |
+
+### Ответ
+
+```json
+{
+  "reactionInfo": {
+    "counters": [
+      {"count": 1, "reaction": "❤️"}
+    ],
+    "totalCount": 1
+  },
+  "reactions": [
+    {
+      "userId": 112572428,
+      "reaction": "❤️"
+    }
+  ]
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `reactions[].userId` | int | ID пользователя, поставившего реакцию |
+| `reactions[].reaction` | string | Эмодзи реакции |
+
+### Отличие от GET_MESSAGE (71)
+
+GET_MESSAGE возвращает только `reactionInfo` — агрегированные счётчики
+по типам реакций. GET_REACTIONS (181) дополнительно возвращает массив
+`reactions` с userId, показывая кто именно поставил каждую реакцию.
+
+### Запрос
+
+```json
+{
+  "chatId": 7268926,
+  "messageId": 116765779164748382
+}
+```
+
+### Ответ
+
+`cmd=1` (ACK).
+
 ## MSG_TYPING (opcode 65)
 
 Отправка индикатора набора текста. Не выполняет никаких действий
@@ -465,6 +528,7 @@ error: "Empty message can't be send"
 | Редактировать | 67 | `{chatId, messageId, text}` | 3* |
 | Реакция | 178 | `{chatId, messageId, reaction}` | 1 |
 | Снять реакцию | 179 | `{chatId, messageId}` | 1 |
+| Получить реакции | 181 | `{chatId, messageId, count}` | 1 |
 | Печатает | 65 | `{chatId}` | 1 |
 | История | 49 | `{chatId, backward, forward, from, ...}` | 1 |
 | Получить сообщение | 71 | `{chatId, messageIds}` | 1 |

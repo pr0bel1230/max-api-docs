@@ -38,6 +38,7 @@
 | 92 | CHAT_ACTIVITY | 1 | [chats.md](chats.md) |
 | 178 | MSG_REACT_SET | 1 | [messaging.md](messaging.md) |
 | 179 | MSG_REACT_REMOVE | 1 | [messaging.md](messaging.md) |
+| 181 | GET_REACTIONS | 1 | [messaging.md](messaging.md) |
 
 \* — на момент исследования. Возможно, требуется другой payload.
 
