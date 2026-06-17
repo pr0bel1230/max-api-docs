@@ -94,6 +94,30 @@ python3 scripts/tests/tcp_delete.py
 - **Экспериментальная верификация** — проверка эффекта операций
   через запросы состояния (GET_HISTORY, GET_CHATS)
 
+### Сторонние источники
+
+- [MaxProtoExplanation](https://github.com/nyakokitsu/MaxProtoExplanation) —
+  объяснение бинарного протокола oneme TCP: структура фрейма, msgpack,
+  LZ4-сжатие
+- [maxcalls](https://github.com/icyfalc0n/maxcalls) — документация
+  WebSocket API, описание аутентификации и опкодов звонков
+- [max-api](https://kirill7mix.github.io/maxapi/) — неофициальная Python
+  библиотека с таблицей 100+ опкодов
+- [PyMax](https://github.com/MaxApiTeam/PyMax) — Python-клиент MAX,
+  коммуникационные протоколы (DeepWiki)
+- [openmax-server](https://github.com/openmax-team/server) — открытая
+  реализация сервера MAX, oneme TCP wire protocol (DeepWiki)
+- [vk-max](https://github.com/larytet-assorted/vk-max) —
+  декомпилированный Android-клиент MAX (VK)
+- [Клиент MAX на Rust](https://dtf.ru/software/3887805-klient-dlya-messendzhera-max-na-rust) —
+  статья на DTF о reverse engineering MAX
+- [python-max-client](https://pypi.org/project/python-max-client/) —
+  ещё одна Python-реализация клиента
+- [OSINT Anatomy: слежка за VPN](https://osintech.substack.com/p/osint-anatomy-does-max-messenger) —
+  исследование телеметрии MAX
+- [madmax](https://pypi.org/project/madmax/) — Python-пакет
+  для работы с MAX API
+
 ## История исследования
 
 Как это начиналось. В одной из реализаций MAX API, гуляющих по сети,
