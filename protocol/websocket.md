@@ -142,8 +142,12 @@ ws.send(json.dumps({
 способ сопоставить ответ и запрос.
 
 ```python
+_seq = 0
 def request(ws, opcode, payload, timeout=15):
     """Отправить запрос, дождаться ответа с тем же seq."""
+    global _seq
+    _seq += 1
+    seq = _seq
     ws.send(json.dumps({
         "ver": 11, "cmd": 0,
         "seq": seq, "opcode": opcode,
@@ -156,8 +160,8 @@ def request(ws, opcode, payload, timeout=15):
             return resp["payload"]
 ```
 
-> **⚠️ Для продакшн-использования используйте [connection.md](connection.md) —**
-> модуль MaxConnection с persistent-соединением, auto-reconnect и seq-матчингом.
+> **⚠️ Для продакшн-использования изучите [connection.md](connection.md) —**
+> persistent-соединение, seq-матчинг и таймауты.
 > Код выше — только для понимания wire-протокола.
 
 ## Отличия от TCP

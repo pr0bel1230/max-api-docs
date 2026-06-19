@@ -31,8 +31,14 @@
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `userAgent.deviceType` | string | Всегда `WEB` |
-| `userAgent.locale` | string | Локаль (`ru`) |
+| `userAgent.locale` | string | Язык интерфейса (`ru`) |
+| `userAgent.deviceLocale` | string | Локаль устройства (`ru`) |
+| `userAgent.osVersion` | string | ОС клиента (`Linux`) |
+| `userAgent.deviceName` | string | Название браузера (`Firefox`) |
+| `userAgent.headerUserAgent` | string | User-Agent из HTTP-заголовка |
 | `userAgent.appVersion` | string | Версия приложения (25.11.1) |
+| `userAgent.screen` | string | Разрешение экрана и плотность (`1080x1920 1.0x`) |
+| `userAgent.timezone` | string | Временная зона (`Asia/Yekaterinburg`) |
 | `deviceId` | string | Уникальный ID устройства |
 
 ### Ответ

@@ -57,9 +57,10 @@ TCP использует бинарный фрейм (MessagePack + LZ4).
 
 1. **[protocol/tcp-protocol.md](protocol/tcp-protocol.md)** или **[protocol/websocket.md](protocol/websocket.md)** — выбери транспорт
 2. **[protocol/auth.md](protocol/auth.md)** — INIT и LOGIN (обязательно)
-3. **[protocol/messaging.md](protocol/messaging.md)** — отправка и получение сообщений
-4. **[protocol/chats.md](protocol/chats.md)** — управление чатами
-5. **[protocol/opcodes.md](protocol/opcodes.md)** — все опкоды (справочник)
+3. **[protocol/connection.md](protocol/connection.md)** — управление сессией (seq-матчинг, таймауты)
+4. **[protocol/messaging.md](protocol/messaging.md)** — отправка и получение сообщений
+5. **[protocol/chats.md](protocol/chats.md)** — управление чатами
+6. **[protocol/opcodes.md](protocol/opcodes.md)** — все опкоды (справочник)
 
 Остальные файлы — по необходимости (файлы, звонки, пресеты, push).
 
