@@ -114,7 +114,7 @@ Payload содержит полные данные пользователя:
   "chats": [
     {
       "id": 7268926,
-      "type": "PRIVATE",
+      "type": "DIALOG",
       "title": "Имя собеседника или название",
       "lastMessage": { "text": "...", ... },
       "newMessages": 0,

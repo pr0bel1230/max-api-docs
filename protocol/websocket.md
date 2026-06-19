@@ -40,6 +40,7 @@ User-Agent: Mozilla/5.0
 ### 1. Подключение и INIT
 
 ```python
+import json
 from websocket import create_connection
 
 ws = create_connection("wss://ws-api.oneme.ru/websocket",
