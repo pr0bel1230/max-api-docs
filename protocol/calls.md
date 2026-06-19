@@ -626,7 +626,7 @@ wss://videowebrtc.okcdn.ru/ws2?userId=910111054239&entityType=USER&conversationI
 }
 ```
 
-### Registered Peer
+### Registered Peer (реконструировано)
 
 Другой участник зарегистрировал свой WebRTC peer:
 
