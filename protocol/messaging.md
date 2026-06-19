@@ -301,12 +301,32 @@ push-уведомлениях о новых сообщениях.
 |------|-----|----------|
 | `chatId` | int | ID чата |
 | `messageId` | int | ID сообщения |
-| `reaction.reactionType` | string | Тип реакции: `EMOJI` |
-| `reaction.id` | string | Эмодзи (Unicode-символ, например `"👍"`, `"😍"`) |
+| `reaction.reactionType` | string | Тип реакции: `EMOJI`. Только объекты, не строки. |
+| `reaction.id` | string | Эмодзи (Unicode-символ, например `"👍"`, `"😍"`). Плоская строка не работает. |
 
 ### Ответ
 
-`cmd=1` (ACK). Для проверки используйте GET_MESSAGE (71).
+```json
+{
+  "reactionInfo": {
+    "counters": [
+      {"count": 1, "reaction": "👍"}
+    ],
+    "yourReaction": "👍",
+    "totalCount": 1
+  }
+}
+```
+
+Возвращает полный `reactionInfo` с обновлёнными счётчиками.
+Для проверки также можно использовать GET_MESSAGE (71).
+
+### Особенности
+
+- Поле `reaction` **обязательно должно быть объектом** с `reactionType` и `id`.
+  Передача строки (`"reaction": "👍"`) возвращает ошибку `cmd=3`:
+  `"Expected map at 11"`.
+- Ответ содержит `yourReaction` — эмодзи, которое только что поставили.
 
 ### Push-уведомление
 
