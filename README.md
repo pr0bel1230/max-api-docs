@@ -152,11 +152,13 @@ python3 scripts/example.py
 Документация составлена на основе:
 - **WebSocket-трафик** — анализ запросов/ответов через DevTools
 - **Прямое тестирование** — отправка запросов через TCP и WebSocket с разными опкодами и payload
-- **Сторонние проекты** (полученные тем же методом): [maxcalls](https://github.com/icyfalc0n/maxcalls),
-  [PyMax](https://github.com/MaxApiTeam/PyMax),
-  [openmax-server](https://github.com/openmax-team/server),
-  [python-max-client](https://pypi.org/project/python-max-client/),
-  [madmax](https://pypi.org/project/madmax/)
+- **Сторонние проекты** (полученные тем же методом):
+  - [**maxcalls**](https://github.com/icyfalc0n/maxcalls) (Go) — базовая структура HTTP API звонков и signaling протокола.
+    Спасибо автору.
+  - [PyMax](https://github.com/MaxApiTeam/PyMax)
+  - [openmax-server](https://github.com/openmax-team/server)
+  - [python-max-client](https://pypi.org/project/python-max-client/)
+  - [madmax](https://pypi.org/project/madmax/)
 
 ## Лицензия
 
