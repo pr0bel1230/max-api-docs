@@ -7,10 +7,10 @@
 - [Аутентификация](auth.md) — INIT, LOGIN
 - [Сообщения](messaging.md) — MSG_SEND, MSG_DELETE, GET_HISTORY, GET_MESSAGE, SEARCH
 - [Чаты](chats.md) — GET_CHATS, CHAT_ACTION, CHAT_OPERATION, GET_STATS, IMAGE_UPLOAD_URL
-- [Контакты](contacts.md) — GET_CONTACTS, профиль
-- [Файлы](files.md) — FILE_UPLOAD, прикрепление файлов
+- [Контакты](contacts.md) — GET_CONTACTS, CONTACTS_PRESENCE, GET_BLOCKED, GET_USERINFO, GET_COMMON_CHATS, GET_SESSIONS, GET_BANNERS
+- [Файлы](files.md) — FILE_UPLOAD, GET_VIDEO_URL
 - [Звонки](calls.md) — CALL_HISTORY, CALL_EDIT, CALL_TOKEN (HTTP API)
-- [Пресеты](presets.md) — GET_PRESET_AVATARS, GET_PRESETS
+- [Пресеты](presets.md) — STICKER_SYNC, STICKER_DATA, ANIMOJI_AND_STICKER_GET, GET_PRESET_AVATARS
 - [Push-уведомления](push.md) — NOTIF_PRESENCE, NOTIF_ATTACH
 
 ## Таблица опкодов
@@ -24,7 +24,7 @@
 | 6 | INIT | 1 | `{userAgent, deviceId}` | [auth.md](auth.md) |
 | 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | [auth.md](auth.md) |
 | 200 | SERVER_TIME | 1 | — | — |
-| 302 | GET_BANNERS | 1 | `{bannersSync: 0}` | — |
+| 302 | GET_BANNERS | 1 | `{bannersSync: 0}` | [contacts.md](contacts.md) |
 
 ### Сообщения
 
@@ -53,21 +53,21 @@
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 32 | GET_CONTACTS | 1 | [contacts.md](contacts.md) |
-| 35 | CONTACTS_PRESENCE | 1 | — |
-| 36 | GET_BLOCKED | 1 | — |
-| 48 | GET_CHATS_BULK | 1 | [chats.md](chats.md) |
-| 50 | CHAT_READ | 1 | [chats.md](chats.md) |
-| 53 | GET_CHATS | 1 | [chats.md](chats.md) |
-| 55 | VOID | 1 | [chats.md](chats.md) |
-| 61 | GET_CHAT_INFO | 1 | [chats.md](chats.md) |
-| 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
-| 74 | GET_STATS | 1 | [chats.md](chats.md) |
-| 75 | CHAT_SUBSCRIBE | 1 | [chats.md](chats.md) |
-| 77 | CHAT_OPERATION | 1 | [chats.md](chats.md) |
-| 86 | CHAT_SHOW | 1 | [chats.md](chats.md) |
-| 177 | GET_USERINFO | 1 | — |
-| 198 | GET_COMMON_CHATS | 1 | — |
-| 272 | GET_FOLDERS | 1 | [chats.md](chats.md) |
+| 35 | CONTACTS_PRESENCE | 1 | — | [contacts.md](contacts.md) |
+| 36 | GET_BLOCKED | 1 | — | [contacts.md](contacts.md) |
+| 48 | GET_CHATS_BULK | 1 | — | [chats.md](chats.md) |
+| 50 | CHAT_READ | 1 | — | [chats.md](chats.md) |
+| 53 | GET_CHATS | 1 | — | [chats.md](chats.md) |
+| 55 | VOID | 1 | — | [chats.md](chats.md) |
+| 61 | GET_CHAT_INFO | 1 | — | [chats.md](chats.md) |
+| 72 | CHAT_ACTION | 1 | — | [chats.md](chats.md) |
+| 74 | GET_STATS | 1 | — | [chats.md](chats.md) |
+| 75 | CHAT_SUBSCRIBE | 1 | — | [chats.md](chats.md) |
+| 77 | CHAT_OPERATION | 1 | — | [chats.md](chats.md) |
+| 86 | CHAT_SHOW | 1 | — | [chats.md](chats.md) |
+| 177 | GET_USERINFO | 1 | — | [contacts.md](contacts.md) |
+| 198 | GET_COMMON_CHATS | 1 | — | [contacts.md](contacts.md) |
+| 272 | GET_FOLDERS | 1 | — | [chats.md](chats.md) |
 
 ### Файлы, изображения, медиа
 
@@ -75,9 +75,9 @@
 |-------|----------|-----|-------------|
 | 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
 | 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md) |
-| 83 | GET_VIDEO_URL | 1 | — |
+| 83 | GET_VIDEO_URL | 1 | [files.md](files.md) |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
-| 96 | GET_SESSIONS | 1 | — |
+| 96 | GET_SESSIONS | 1 | [contacts.md](contacts.md) |
 
 ### Звонки (голосовые и видеозвонки)
 
