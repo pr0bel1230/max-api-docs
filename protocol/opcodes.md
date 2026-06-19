@@ -76,7 +76,7 @@
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
-| 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md) |
+| 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md#image_upload_iusmile-opcode-81) — iusmile.oneme.ru |
 | 83 | GET_VIDEO_URL | 1 | [files.md](files.md) |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
 | 96 | GET_SESSIONS | 1 | [contacts.md](contacts.md) |
@@ -108,11 +108,11 @@ CALL_EDIT (69) работает только для звонков, создан
 
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
-| 5 | NAV_ANALYTICS | 1 | Аналитические события. Payload: `{"events": [{type, event, ...}]}`. Не является частью основного протокола — используется для логирования телеметрии. |
-| 55 | VOID | 1 | Возвращает `cmd=1` с пустым payload. Назначение не установлено — возможно, heartbeat для чатов или заглушка. |
-| 100 | VOID | 1 | Возвращает `cmd=1` с пустым payload. Вероятно, неиспользуемый или зарезервированный опкод. |
-| 103 | VOID | 1 | Возвращает `cmd=1` с пустым payload. Вероятно, неиспользуемый или зарезервированный опкод. |
-| 200 | SERVER_TIME | 1 | Получение серверного времени. Payload может быть пустым или содержать timestamp. |
+| 5 | NAV_ANALYTICS | 1 | Аналитические события. Payload: `{"events": [{type, event, ...}]}`. |
+| 55 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload=null` с `{chatId}`. |
+| 100 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload=null` с любым payload. |
+| 103 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload={}` с любым payload. |
+| 200 | SERVER_TIME | 1 | Получение серверного времени. |
 
 ### Push-уведомления (cmd=0)
 

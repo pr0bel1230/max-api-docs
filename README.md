@@ -80,6 +80,9 @@ max-api-docs/
 │   ├── presets.md              # Пресеты (аватары, стикеры, эмодзи)
 │   ├── push.md                 # Push-уведомления
 │   ├── connection.md           # Управление сессией
+│   ├── elements.md             # Rich-элементы (форматирование текста)
+│   ├── error-codes.md          # Справочник ошибок
+│   ├── reconnect.md            # Graceful Reconnect и heartbeat
 │   ├── tcp-protocol.md         # TCP протокол (MessagePack, ver=10)
 │   └── websocket.md            # WebSocket протокол (JSON, ver=11)
 └── scripts/
