@@ -11,7 +11,7 @@
 - [Файлы](files.md) — FILE_UPLOAD, GET_VIDEO_URL
 - [Звонки](calls.md) — CALL_HISTORY, CALL_EDIT, CALL_TOKEN (HTTP API)
 - [Пресеты](presets.md) — STICKER_SYNC, STICKER_DATA, ANIMOJI_AND_STICKER_GET, GET_PRESET_AVATARS
-- [Push-уведомления](push.md) — NOTIF_PRESENCE, NOTIF_ATTACH
+- [Push-уведомления](push.md) — NOTIF_TYPING, NOTIF_PRESENCE, NOTIF_ATTACH, NOTIF_MSG_DELETE, NOTIF_REACTION
 
 ## Таблица опкодов
 
@@ -53,21 +53,21 @@
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 32 | GET_CONTACTS | 1 | [contacts.md](contacts.md) |
-| 35 | CONTACTS_PRESENCE | 1 | — | [contacts.md](contacts.md) |
-| 36 | GET_BLOCKED | 1 | — | [contacts.md](contacts.md) |
-| 48 | GET_CHATS_BULK | 1 | — | [chats.md](chats.md) |
-| 50 | CHAT_READ | 1 | — | [chats.md](chats.md) |
-| 53 | GET_CHATS | 1 | — | [chats.md](chats.md) |
-| 55 | VOID | 1 | — | [chats.md](chats.md) |
-| 61 | GET_CHAT_INFO | 1 | — | [chats.md](chats.md) |
-| 72 | CHAT_ACTION | 1 | — | [chats.md](chats.md) |
-| 74 | GET_STATS | 1 | — | [chats.md](chats.md) |
-| 75 | CHAT_SUBSCRIBE | 1 | — | [chats.md](chats.md) |
-| 77 | CHAT_OPERATION | 1 | — | [chats.md](chats.md) |
-| 86 | CHAT_SHOW | 1 | — | [chats.md](chats.md) |
-| 177 | GET_USERINFO | 1 | — | [contacts.md](contacts.md) |
-| 198 | GET_COMMON_CHATS | 1 | — | [contacts.md](contacts.md) |
-| 272 | GET_FOLDERS | 1 | — | [chats.md](chats.md) |
+| 35 | CONTACTS_PRESENCE | 1 | [contacts.md](contacts.md) |
+| 36 | GET_BLOCKED | 1 | [contacts.md](contacts.md) |
+| 48 | GET_CHATS_BULK | 1 | [chats.md](chats.md) |
+| 50 | CHAT_READ | 1 | [chats.md](chats.md) |
+| 53 | GET_CHATS | 1 | [chats.md](chats.md) |
+| 55 | VOID | 1 | [chats.md](chats.md) |
+| 61 | GET_CHAT_INFO | 1 | [chats.md](chats.md) |
+| 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
+| 74 | GET_STATS | 1 | [chats.md](chats.md) |
+| 75 | CHAT_SUBSCRIBE | 1 | [chats.md](chats.md) |
+| 77 | CHAT_OPERATION | 1 | [chats.md](chats.md) |
+| 86 | CHAT_SHOW | 1 | [chats.md](chats.md) |
+| 177 | GET_USERINFO | 1 | [contacts.md](contacts.md) |
+| 198 | GET_COMMON_CHATS | 1 | [contacts.md](contacts.md) |
+| 272 | GET_FOLDERS | 1 | [chats.md](chats.md) |
 
 ### Файлы, изображения, медиа
 
