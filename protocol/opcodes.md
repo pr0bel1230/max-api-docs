@@ -98,9 +98,9 @@ CALL_EDIT (69) работает только для звонков, создан
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 25 | GET_PRESET_AVATARS | 1 | [presets.md](presets.md) |
-| 26 | GET_PRESETS | 1 | [presets.md](presets.md) |
-| 27 | GET_STICKER_SETS | 1 | — |
-| 28 | GET_ANIMOJI | 1 | — |
+| 26 | STICKER_SYNC | 1 | [presets.md](presets.md) |
+| 27 | STICKER_DATA | 1 | [presets.md](presets.md) |
+| 28 | ANIMOJI_AND_STICKER_GET | 1 | [presets.md](presets.md) |
 
 ### Прочие
 
