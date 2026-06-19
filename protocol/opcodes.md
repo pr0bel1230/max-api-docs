@@ -65,6 +65,7 @@
 | 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
 | 74 | GET_STATS | 1 | [chats.md](chats.md) |
 | 75 | CHAT_SUBSCRIBE | 1 | [chats.md](chats.md) |
+| 84 | CHAT_SUBSCRIBE_BULK | 1 | [chats.md](chats.md#chat_subscribe_bulk-opcode-84) |
 | 77 | CHAT_OPERATION | 1 | [chats.md](chats.md) |
 | 86 | CHAT_SHOW | 1 | [chats.md](chats.md) |
 | 177 | GET_USERINFO | 1 | [contacts.md](contacts.md) |
@@ -115,6 +116,10 @@ CALL_EDIT (69) работает только для звонков, создан
 | 200 | SERVER_TIME | 1 | Получение серверного времени. |
 
 ### Push-уведомления (cmd=0)
+
+**Важно:** push-опкоды работают **только как уведомления** (сервер → клиент).
+Их нельзя использовать как запросы (клиент → сервер) — большинство
+возвращает `"Unknown opcode"` при попытке отправки.
 
 | Опкод | Название | Описание | Документация |
 |-------|----------|----------|-------------|
