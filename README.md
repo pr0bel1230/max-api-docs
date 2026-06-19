@@ -118,9 +118,9 @@ python3 scripts/example.py
 | 19 | LOGIN | Авторизация |
 | 25 | GET_PRESET_AVATARS | Пресеты аватаров |
 | 26 | GET_PRESETS | Стикеры, эмодзи, реакции |
+| 49 | GET_HISTORY | История сообщений |
 | 53 | GET_CHATS | Список чатов |
 | 61 | GET_CHAT_INFO | Информация о чате |
-| 49 | GET_HISTORY | История сообщений |
 | 64 | MSG_SEND | Отправка сообщения |
 | 65 | MSG_TYPING | Индикатор печатания |
 | 66 | MSG_DELETE | Удаление сообщения |
