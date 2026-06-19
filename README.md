@@ -130,8 +130,10 @@ python3 scripts/example.py
 | 70 | FORWARD_MESSAGE | Пересылка сообщения |
 | 73 | SEARCH_MESSAGES | Поиск по сообщениям |
 | 77 | CHAT_OPERATION | Операции с чатами |
-| 78 | CALL_START | Инициализация звонка |
+| 78 | CALL_START | Подключение к звонку |
 | 79 | CALL_HISTORY | История звонков |
+| 137 | NOTIF_INCOMING_CALL | Push: входящий звонок |
+| 158 | CALL_TOKEN | Токен для HTTP API звонков |
 | 80 | IMAGE_UPLOAD_URL | URL загрузки изображений |
 | 81 | IMAGE_UPLOAD_IUSMILE | URL загрузки (iusmile) |
 | 86 | CHAT_SHOW | Управление отображением чата |

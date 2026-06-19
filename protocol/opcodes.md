@@ -9,7 +9,7 @@
 - [Чаты](chats.md) — GET_CHATS, CHAT_ACTION, CHAT_OPERATION, GET_STATS, IMAGE_UPLOAD_URL
 - [Контакты](contacts.md) — GET_CONTACTS, профиль
 - [Файлы](files.md) — FILE_UPLOAD, прикрепление файлов
-- [Звонки](calls.md) — CALL_HISTORY, CALL_EDIT, CALL_START
+- [Звонки](calls.md) — CALL_HISTORY, CALL_EDIT, CALL_TOKEN (HTTP API)
 - [Пресеты](presets.md) — GET_PRESET_AVATARS, GET_PRESETS
 - [Push-уведомления](push.md) — NOTIF_PRESENCE, NOTIF_ATTACH
 
@@ -86,8 +86,12 @@
 | 69 | CALL_EDIT | 3* | [calls.md](calls.md) |
 | 78 | CALL_START | 3* | [calls.md](calls.md) |
 | 79 | CALL_HISTORY | 1 | [calls.md](calls.md) |
+| 158 | CALL_TOKEN | 1 | [calls.md](calls.md) |
 
-\* — возвращает ошибку валидации при неполном payload.
+\* — возвращает ошибку при неполном payload или для неактивных звонков.
+CALL_EDIT (69) работает только для звонков, созданных через официальный
+клиент. Для создания звонков используется HTTP API
+`vchat.startConversation` — см. [calls.md](calls.md).
 
 ### Пресеты (стикеры, эмодзи, аватары)
 
@@ -114,6 +118,7 @@
 | 129 | NOTIF_TYPING | Уведомление о наборе текста | [push.md](push.md) |
 | 132 | NOTIF_PRESENCE | Изменение статуса присутствия | [push.md](push.md) |
 | 136 | NOTIF_ATTACH | Подтверждение загрузки файла | [files.md](files.md) |
+| 137 | NOTIF_INCOMING_CALL | Уведомление о входящем звонке | [calls.md](calls.md) |
 | 140 | NOTIF_MSG_DELETE_RANGE | Уведомление о массовом удалении | [push.md](push.md) |
 | 142 | NOTIF_MSG_DELETE | Уведомление об удалении сообщения | [push.md](push.md) |
 | 156 | NOTIF_REACTION | Уведомление о реакции на сообщение | [messaging.md](messaging.md) |
