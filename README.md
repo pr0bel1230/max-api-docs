@@ -29,11 +29,7 @@ max-api-docs/
 │   ├── tcp-protocol.md                    # TCP протокол (MessagePack, ver=10)
 │   └── websocket.md                       # WebSocket протокол (JSON, ver=11)
 └── scripts/
-    ├── mcp-max-user-server.py             # MCP сервер для AI-ассистентов
-    └── tests/
-        ├── tcp_delete.py                  # DELETE-запрос через TCP (opcode 66)
-        ├── delete_variants.py             # Сканирование опкодов
-        └── tcp_raw_test.py                # Дампы INIT/LOGIN
+    └── example.py                         # Пример работы с MAX API
 ```
 
 ## Транспорт
@@ -48,25 +44,31 @@ MAX использует два параллельных протокола:
 Оба используют одинаковую систему опкодов и payload.
 Подключение: **INIT (6)** → **LOGIN (19)** → рабочие запросы.
 
-## Быстрый старт
+## Пример работы
 
 ```bash
-pip install websocket-client msgpack certifi
+pip install websocket-client certifi
 
 export ACCESS_TOKEN="токен из web.max.ru"
 export DEVICE_ID="device_id из INIT запроса"
 
-python3 scripts/tests/tcp_delete.py
+python3 scripts/example.py
 ```
+
+Скрипт [scripts/example.py](scripts/example.py) показывает:
+- INIT (opcode 6) — инициализация сессии
+- LOGIN (opcode 19) — авторизация
+- GET_CHATS (opcode 53) — список чатов
+- GET_HISTORY (opcode 49) — история сообщений
+- MSG_SEND (opcode 64) — отправка сообщения
 
 **Как получить токены:**
 1. Авторизуйся на [web.max.ru](https://web.max.ru) в Chrome/Firefox
-2. F12 → Network
-3. **Перезагрузи страницу** (F5) — чтобы захватить WebSocket-соединение с самого начала
-4. В фильтре выбери `WS` (WebSocket)
-5. Кликни на единственное соединение `wss://ws-api.oneme.ru/websocket`
-6. Во вкладке Messages найди **первое** сообщение — это INIT (opcode=6). В payload будет `deviceId`
-7. **Второе** сообщение — LOGIN (opcode=19). В payload будет `token`
+2. F12 → Network → перезагрузи страницу (F5)
+3. В фильтре выбери `WS` (WebSocket)
+4. Кликни на соединение `wss://ws-api.oneme.ru/websocket`
+5. Первое сообщение (INIT, opcode=6) → payload содержит `deviceId`
+6. Второе сообщение (LOGIN, opcode=19) → payload содержит `token`
 
 ## Основные опкоды
 
