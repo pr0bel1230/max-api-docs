@@ -26,7 +26,7 @@ ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 def req(op, payload=None):
     """Формирует запрос в формате WebSocket MAX."""
     return json.dumps({
-        "ver": 11, "cmd": 2,
+        "ver": 11, "cmd": 0,
         "seq": int(time.time() * 1000) & 0xFFFF,
         "opcode": op,
         "payload": payload or {}
