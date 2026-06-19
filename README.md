@@ -56,7 +56,7 @@ TCP использует бинарный фрейм (MessagePack + LZ4).
 Если видишь репозиторий впервые — вот порядок:
 
 1. **[protocol/tcp-protocol.md](protocol/tcp-protocol.md)** или **[protocol/websocket.md](protocol/websocket.md)** — выбери транспорт
-2. **[protocol/auth.md](protocol/auth.md)** — INIT и LOGIN (обязательно)
+2. **[protocol/auth.md](protocol/auth.md)** — INIT, LOGIN (обязательно)
 3. **[protocol/connection.md](protocol/connection.md)** — управление сессией (seq-матчинг, таймауты)
 4. **[protocol/messaging.md](protocol/messaging.md)** — отправка и получение сообщений
 5. **[protocol/chats.md](protocol/chats.md)** — управление чатами
@@ -70,12 +70,13 @@ TCP использует бинарный фрейм (MessagePack + LZ4).
 max-api-docs/
 ├── protocol/
 │   ├── opcodes.md              # Полная таблица опкодов (справочник)
-│   ├── auth.md                 # Аутентификация (INIT, LOGIN)
+│   ├── auth.md                 # Аутентификация (INIT, LOGIN, SMS)
 │   ├── messaging.md            # Сообщения (send, delete, history, search)
 │   ├── chats.md                # Чаты (список, управление, upload)
 │   ├── contacts.md             # Контакты и профиль
 │   ├── files.md                # Загрузка и отправка файлов
 │   ├── calls.md                # Звонки (история, старт, управление)
+│   ├── calls-security.md       # Безопасность звонков (DTLS, SRTP, CSP)
 │   ├── presets.md              # Пресеты (аватары, стикеры, эмодзи)
 │   ├── push.md                 # Push-уведомления
 │   ├── connection.md           # Управление сессией
@@ -116,11 +117,14 @@ python3 scripts/example.py
 | Опкод | Команда | Назначение |
 |-------|---------|------------|
 | 6 | INIT | Инициализация сессии |
+| 17 | VERIFICATION_REQUEST | SMS-запрос кода авторизации |
+| 18 | CODE_ENTER | Подтверждение кода из SMS |
 | 19 | LOGIN | Авторизация |
 | 25 | GET_PRESET_AVATARS | Пресеты аватаров |
 | 26 | GET_PRESETS | Стикеры, эмодзи, реакции |
 | 49 | GET_HISTORY | История сообщений |
 | 53 | GET_CHATS | Список чатов |
+| 55 | VOID | Heartbeat чатов / заглушка |
 | 61 | GET_CHAT_INFO | Информация о чате |
 | 64 | MSG_SEND | Отправка сообщения |
 | 65 | MSG_TYPING | Индикатор печатания |
@@ -140,6 +144,8 @@ python3 scripts/example.py
 | 87 | FILE_UPLOAD | Загрузка файла |
 | 92 | CHAT_ACTIVITY | Информация о чате за период |
 | 272 | GET_FOLDERS | Папки чатов |
+| 200 | SERVER_TIME | Серверное время |
+| 302 | GET_BANNERS | Баннеры приложения |
 
 Полная таблица → [protocol/opcodes.md](protocol/opcodes.md)
 
