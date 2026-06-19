@@ -197,6 +197,132 @@ for _ in range(10):
 - Ответы могут приходить вперемешку с push-уведомлениями (cmd=0)
 - Сопоставлять ответ с запросом нужно по `seq`
 
+---
+
+## Альтернативная авторизация: SMS (opcode 17 и 18)
+
+MAX поддерживает авторизацию через SMS на номер телефона. Это
+альтернатива токену из браузера — может быть полезна для тестирования
+и автоматизации.
+
+Процесс:
+```
+VERIFICATION_REQUEST (17) → SMS с кодом → CODE_ENTER (18) → access_token
+```
+
+### 1. VERIFICATION_REQUEST (opcode 17)
+
+Запрос на отправку SMS с кодом подтверждения на номер телефона.
+
+**Запрос:**
+```json
+{
+  "phone": "+71234567890",
+  "type": "START_AUTH",
+  "language": "ru"
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `phone` | string | Номер телефона в международном формате |
+| `type` | string | Всегда `"START_AUTH"` |
+| `language` | string | Язык SMS-сообщения (`"ru"`) |
+
+**Ответ:**
+```json
+{
+  "token": "uuid-токен-для-подтверждения"
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `token` | string | UUID — временный токен для следующего шага |
+
+**Примечание:** После успешного запроса на указанный номер приходит
+SMS с 4-значным кодом подтверждения.
+
+### 2. CODE_ENTER (opcode 18)
+
+Отправка кода подтверждения из SMS.
+
+**Запрос:**
+```json
+{
+  "token": "uuid-из-VerificationRequest",
+  "verifyCode": "1234",
+  "authTokenType": "CHECK_CODE"
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `token` | string | Токен из ответа VERIFICATION_REQUEST |
+| `verifyCode` | string | 4-значный код из SMS |
+| `authTokenType` | string | Всегда `"CHECK_CODE"` |
+
+**Ответ:**
+```json
+{
+  "tokenAttrs": {
+    "LOGIN": {
+      "token": "access_token_для_дальнейшей_работы"
+    }
+  }
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `tokenAttrs.LOGIN.token` | string | Токен доступа для LOGIN (opcode 19) |
+
+Полученный токен можно использовать в LOGIN (opcode 19) для
+полноценной авторизации.
+
+### Полный цикл SMS-авторизации
+
+```python
+# 1. INIT (opcode 6) — обязателен перед любым запросом
+ws.send(req(6, {"deviceId": device_id, "userAgent": {...}}))
+ws.recv()  # INIT OK
+
+# 2. Запрос SMS
+ws.send(req(17, {
+    "phone": "+71234567890",
+    "type": "START_AUTH",
+    "language": "ru"
+}))
+resp = json.loads(ws.recv())
+verify_token = resp["payload"]["token"]
+print(f"Токен подтверждения: {verify_token}")
+# → SMS с кодом на телефон
+
+# 3. Ввод кода (код получаете из SMS)
+code = input("Введите код из SMS: ")
+ws.send(req(18, {
+    "token": verify_token,
+    "verifyCode": code,
+    "authTokenType": "CHECK_CODE"
+}))
+resp = json.loads(ws.recv())
+access_token = resp["payload"]["tokenAttrs"]["LOGIN"]["token"]
+print(f"Токен доступа: {access_token}")
+
+# 4. LOGIN — полноценная авторизация
+ws.send(req(19, {
+    "token": access_token,
+    "interactive": True,
+    "chatsCount": 100,
+    "chatsSync": 100,
+}))
+ws.recv()  # LOGIN OK
+```
+
+**Важно:** опкоды 17 и 18 работают через стандартное WebSocket-соединение
+после INIT (opcode 6). Перед VERIFICATION_REQUEST не нужен LOGIN —
+это этап, предшествующий авторизации.
+
 ## Возможные ошибки
 
 | Симптом | Причина |

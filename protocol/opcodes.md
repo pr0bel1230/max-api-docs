@@ -4,8 +4,8 @@
 Совместимы с WebSocket (ver=11, JSON).
 
 Подробная документация по группам опкодов:
-- [Аутентификация](auth.md) — INIT, LOGIN
-- [Сообщения](messaging.md) — MSG_SEND, MSG_DELETE, GET_HISTORY, GET_MESSAGE, SEARCH
+- [Аутентификация](auth.md) — INIT, LOGIN, VERIFICATION_REQUEST, CODE_ENTER
+- [Сообщения](messaging.md) — MSG_SEND, MSG_DELETE, MSG_EDIT, MSG_FWD, GET_HISTORY, GET_MESSAGE, SEARCH
 - [Чаты](chats.md) — GET_CHATS, CHAT_ACTION, CHAT_OPERATION, GET_STATS, IMAGE_UPLOAD_URL
 - [Контакты](contacts.md) — GET_CONTACTS, CONTACTS_PRESENCE, GET_BLOCKED, GET_USERINFO, GET_COMMON_CHATS, GET_SESSIONS, GET_BANNERS
 - [Файлы](files.md) — FILE_UPLOAD, GET_VIDEO_URL
@@ -22,6 +22,8 @@
 | 1 | PING | 1 | `{"interactive": true}` | [push.md](push.md) |
 | 5 | NAV_ANALYTICS | 1 | `{events: [{type: "NAV", event: ...}]}` | — |
 | 6 | INIT | 1 | `{userAgent, deviceId}` | [auth.md](auth.md) |
+| 17 | VERIFICATION_REQUEST | 1 | `{phone, type, language}` | [auth.md](auth.md) |
+| 18 | CODE_ENTER | 1 | `{token, verifyCode, authTokenType}` | [auth.md](auth.md) |
 | 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | [auth.md](auth.md) |
 | 200 | SERVER_TIME | 1 | — | — |
 | 302 | GET_BANNERS | 1 | `{bannersSync: 0}` | [contacts.md](contacts.md) |
@@ -36,7 +38,7 @@
 | 65 | MSG_TYPING | 1 | [messaging.md](messaging.md) |
 | 66 | MSG_DELETE | 1 | [messaging.md](messaging.md) |
 | 67 | MSG_EDIT | 1 | [messaging.md](messaging.md) |
-| 68 | MSG_FWD | 3 | — |
+| 68 | MSG_FWD | 3 | [messaging.md](messaging.md) |
 | 70 | FORWARD_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 73 | SEARCH_MESSAGES | 1 | [messaging.md](messaging.md) |
@@ -106,9 +108,11 @@ CALL_EDIT (69) работает только для звонков, создан
 
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
-| 100 | VOID | 1 | — |
-| 103 | VOID | 1 | — |
-| 200 | SERVER_TIME | 1 | — |
+| 5 | NAV_ANALYTICS | 1 | Аналитические события. Payload: `{"events": [{type, event, ...}]}`. Не является частью основного протокола — используется для логирования телеметрии. |
+| 55 | VOID | 1 | Возвращает `cmd=1` с пустым payload. Назначение не установлено — возможно, heartbeat для чатов или заглушка. |
+| 100 | VOID | 1 | Возвращает `cmd=1` с пустым payload. Вероятно, неиспользуемый или зарезервированный опкод. |
+| 103 | VOID | 1 | Возвращает `cmd=1` с пустым payload. Вероятно, неиспользуемый или зарезервированный опкод. |
+| 200 | SERVER_TIME | 1 | Получение серверного времени. Payload может быть пустым или содержать timestamp. |
 
 ### Push-уведомления (cmd=0)
 
