@@ -3,46 +3,86 @@
 Документация протокола российского мессенджера [MAX (МАКС)](https://max.ru/), полученная методом
 reverse engineering.
 
-## Предназначение
+## Что такое MAX API?
 
-Этот репозиторий содержит техническое описание закрытого протокола API
-MAX — мессенджера, созданного компанией VK.
-Официальной публичной документации API не существует; всё, что здесь
-написано, получено анализом трафика.
+MAX — мессенджер компании VK. Его API работает через WebSocket или TCP:
+клиент подключается к серверу и обменивается JSON-сообщениями.
 
-## Структура
+**Опкод (opcode)** — это номер действия. Каждый запрос — число-команда
+с данными (payload). Например:
+- `opcode 64` с payload `{"text": "Привет"}` → отправить сообщение
+- `opcode 53` → получить список чатов
+- `opcode 19` → авторизоваться
 
+Сервер отвечает аналогичной структурой: опкод + данные.
+
+## Формат запроса и ответа
+
+```json
+{
+  "ver": 11,        // версия протокола
+  "cmd": 2,         // 2 = запрос, 1 = ответ (ACK), 3 = ошибка
+  "seq": 12345,     // номер запроса (для сопоставления ответа)
+  "opcode": 64,     // номер команды
+  "payload": {}     // данные запроса/ответа
+}
 ```
-max-api-docs/
-├── README.md                              # Этот файл
-├── protocol/
-│   ├── opcodes.md                         # Полная таблица опкодов
-│   ├── auth.md                            # Аутентификация (INIT, LOGIN)
-│   ├── messaging.md                       # Сообщения (send, delete, history, search)
-│   ├── chats.md                           # Чаты (список, управление, upload)
-│   ├── contacts.md                        # Контакты и профиль
-│   ├── files.md                           # Загрузка и отправка файлов
-│   ├── calls.md                           # Звонки (история, старт, управление)
-│   ├── presets.md                         # Пресеты (аватары, стикеры, эмодзи)
-│   ├── push.md                            # Push-уведомления
-│   ├── connection.md                      # Управление сессией (MaxConnection vs probe)
-│   ├── tcp-protocol.md                    # TCP протокол (MessagePack, ver=10)
-│   └── websocket.md                       # WebSocket протокол (JSON, ver=11)
-└── scripts/
-    └── example.py                         # Пример работы с MAX API
-```
+
+Все поля обязательны. `cmd=1` — успех, `cmd=3` — ошибка (проверяй `payload.error`).
+
+## Подключение
+
+Любая сессия начинается с двух обязательных шагов:
+
+**INIT (6)** → инициализация, передаёшь `deviceId`
+**LOGIN (19)** → авторизация, передаёшь `token`
+
+После этого можно отправлять любые рабочие запросы.
 
 ## Транспорт
 
-MAX использует два параллельных протокола:
+MAX использует два параллельных протокола с одинаковой системой опкодов:
 
 | Транспорт | Endpoint | Формат | Версия |
 |-----------|----------|--------|--------|
 | WebSocket | `wss://ws-api.oneme.ru/websocket` | JSON | 11 |
 | TCP (SSL) | `api.oneme.ru:443` | MessagePack | 10 |
 
-Оба используют одинаковую систему опкодов и payload.
-Подключение: **INIT (6)** → **LOGIN (19)** → рабочие запросы.
+WebSocket проще для начала — все данные в читаемом JSON.
+TCP использует бинарный фрейм (MessagePack + LZ4).
+
+## С чего начать читать
+
+Если видишь репозиторий впервые — вот порядок:
+
+1. **[protocol/tcp-protocol.md](protocol/tcp-protocol.md)** или **[protocol/websocket.md](protocol/websocket.md)** — выбери транспорт
+2. **[protocol/auth.md](protocol/auth.md)** — INIT и LOGIN (обязательно)
+3. **[protocol/messaging.md](protocol/messaging.md)** — отправка и получение сообщений
+4. **[protocol/chats.md](protocol/chats.md)** — управление чатами
+5. **[protocol/opcodes.md](protocol/opcodes.md)** — все опкоды (справочник)
+
+Остальные файлы — по необходимости (файлы, звонки, пресеты, push).
+
+## Структура репозитория
+
+```
+max-api-docs/
+├── protocol/
+│   ├── opcodes.md              # Полная таблица опкодов (справочник)
+│   ├── auth.md                 # Аутентификация (INIT, LOGIN)
+│   ├── messaging.md            # Сообщения (send, delete, history, search)
+│   ├── chats.md                # Чаты (список, управление, upload)
+│   ├── contacts.md             # Контакты и профиль
+│   ├── files.md                # Загрузка и отправка файлов
+│   ├── calls.md                # Звонки (история, старт, управление)
+│   ├── presets.md              # Пресеты (аватары, стикеры, эмодзи)
+│   ├── push.md                 # Push-уведомления
+│   ├── connection.md           # Управление сессией
+│   ├── tcp-protocol.md         # TCP протокол (MessagePack, ver=10)
+│   └── websocket.md            # WebSocket протокол (JSON, ver=11)
+└── scripts/
+    └── example.py              # Пример работы с MAX API
+```
 
 ## Пример работы
 
@@ -63,7 +103,7 @@ python3 scripts/example.py
 - MSG_SEND (opcode 64) — отправка сообщения
 
 **Как получить токены:**
-1. Авторизуйся на [web.max.ru](https://web.max.ru) в Chrome/Firefox
+1. Открой [web.max.ru](https://web.max.ru) в Chrome/Firefox
 2. F12 → Network → перезагрузи страницу (F5)
 3. В фильтре выбери `WS` (WebSocket)
 4. Кликни на соединение `wss://ws-api.oneme.ru/websocket`
@@ -106,38 +146,13 @@ python3 scripts/example.py
 ## Источники
 
 Документация составлена на основе:
-
-- **Исходный код веб-клиента** — JavaScript-бандлы `web.max.ru`,
-  содержат полную карту опкодов и структуры payload
 - **WebSocket-трафик** — анализ запросов/ответов через DevTools
-- **Прямое тестирование** — отправка запросов напрямую через TCP
-  сокеты и WebSocket с различными опкодами и payload
-- **Экспериментальная верификация** — проверка эффекта операций
-  через запросы состояния (GET_HISTORY, GET_CHATS)
-
-### Сторонние источники
-
-- [MaxProtoExplanation](https://github.com/nyakokitsu/MaxProtoExplanation) —
-  объяснение бинарного протокола oneme TCP: структура фрейма, msgpack,
-  LZ4-сжатие
-- [maxcalls](https://github.com/icyfalc0n/maxcalls) — документация
-  WebSocket API, описание аутентификации и опкодов звонков
-- [max-api](https://kirill7mix.github.io/maxapi/) — неофициальная Python
-  библиотека с таблицей 100+ опкодов
-- [PyMax](https://github.com/MaxApiTeam/PyMax) — Python-клиент MAX,
-  коммуникационные протоколы (DeepWiki)
-- [openmax-server](https://github.com/openmax-team/server) — открытая
-  реализация сервера MAX, oneme TCP wire protocol (DeepWiki)
-- [vk-max](https://github.com/larytet-assorted/vk-max) —
-  декомпилированный Android-клиент MAX (VK)
-- [Клиент MAX на Rust](https://dtf.ru/software/3887805-klient-dlya-messendzhera-max-na-rust) —
-  статья на DTF о reverse engineering MAX
-- [python-max-client](https://pypi.org/project/python-max-client/) —
-  ещё одна Python-реализация клиента
-- [OSINT Anatomy: слежка за VPN](https://osintech.substack.com/p/osint-anatomy-does-max-messenger) —
-  исследование телеметрии MAX
-- [madmax](https://pypi.org/project/madmax/) — Python-пакет
-  для работы с MAX API
+- **Прямое тестирование** — отправка запросов через TCP и WebSocket с разными опкодами и payload
+- **Сторонние проекты** (полученные тем же методом): [maxcalls](https://github.com/icyfalc0n/maxcalls),
+  [PyMax](https://github.com/MaxApiTeam/PyMax),
+  [openmax-server](https://github.com/openmax-team/server),
+  [python-max-client](https://pypi.org/project/python-max-client/),
+  [madmax](https://pypi.org/project/madmax/)
 
 ## Лицензия
 
