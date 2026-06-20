@@ -122,8 +122,9 @@ CALL_EDIT (69) работает только для звонков, создан
 ### Push-уведомления (cmd=0)
 
 **Важно:** push-опкоды работают **только как уведомления** (сервер → клиент).
-Их нельзя использовать как запросы (клиент → сервер) — большинство
-возвращает `"Unknown opcode"` при попытке отправки.
+Их нельзя использовать как запросы (клиент → сервер) — все опкоды
+диапазона 128–156 (кроме 144 и 145) возвращают ошибку
+`"Unknown opcode"` при попытке отправки.
 
 Исключения: **144** и **145** работают и как запросы (см. ниже).
 
@@ -131,14 +132,23 @@ CALL_EDIT (69) работает только для звонков, создан
 |-------|----------|----------|-------------|
 | 128 | NOTIF_MSG_EDIT | Уведомление о редактировании сообщения | [push.md](push.md) |
 | 129 | NOTIF_TYPING | Уведомление о наборе текста | [push.md](push.md) |
-| 130 | UNKNOWN_130 | Подтверждение прочтения от другого участника | [push.md](push.md) |
+| 130 | NOTIF_READ | Подтверждение прочтения | [push.md](push.md) |
+| 131 | UNKNOWN_131 | Push-уведомление | [push.md](push.md) |
 | 132 | NOTIF_PRESENCE | Изменение статуса присутствия | [push.md](push.md) |
+| 133 | UNKNOWN_133 | Push-уведомление | [push.md](push.md) |
+| 134 | UNKNOWN_134 | Push-уведомление | [push.md](push.md) |
+| 135 | UNKNOWN_135 | Push-уведомление | [push.md](push.md) |
 | 136 | NOTIF_ATTACH | Подтверждение загрузки файла | [files.md](files.md) |
 | 137 | NOTIF_INCOMING_CALL | Уведомление о входящем звонке | [calls.md](calls.md) |
+| 138 | UNKNOWN_138 | Push-уведомление | [push.md](push.md) |
+| 139 | UNKNOWN_139 | Push-уведомление | [push.md](push.md) |
 | 140 | NOTIF_MSG_DELETE_RANGE | Уведомление о массовом удалении | [push.md](push.md) |
+| 141 | UNKNOWN_141 | Push-уведомление | [push.md](push.md) |
 | 142 | NOTIF_MSG_DELETE | Уведомление об удалении сообщения | [push.md](push.md) |
+| 143 | UNKNOWN_143 | Push-уведомление | [push.md](push.md) |
 | 144 | GET_CONTACTS_V2 | **Запрос:** контакты чата по `{"chatId": int}` | [contacts.md](contacts.md) |
-| 145 | PRESENCE_GET | **Запрос:** получить присутствие по `{"interactive": true}` | [contacts.md](contacts.md) |
+| 145 | PRESENCE_GET | **Запрос:** получить присутствие по `{"botId": int}` | [contacts.md](contacts.md) |
+| 146-155 | UNKNOWN_146-155 | Push-уведомления (диапазон) | [push.md](push.md) |
 | 156 | NOTIF_REACTION | Уведомление о реакции на сообщение | [messaging.md](messaging.md) |
 
 ## Коды ответа cmd
