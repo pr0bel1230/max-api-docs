@@ -1,7 +1,7 @@
 # WebSocket протокол MAX (ver=11)
 
-**Endpoint:** `wss://ws-api.oneme.ru/websocket`  
-**Формат:** JSON (текстовые фреймы)  
+**Endpoint:** `wss://ws-api.oneme.ru/websocket`
+**Формат:** JSON (текстовые фреймы)
 **Версия:** 11
 
 ## Структура сообщения

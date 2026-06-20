@@ -774,16 +774,16 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
 Клиент должен отвечать `"pong"` (raw string).
 
 ---
-    
+
 ## Принятие входящего звонка (accept-call)
-    
+
 После получения **ServerHello (connection)**, принимающая сторона
 должна подтвердить принятие звонка.
-    
+
 ### accept-call команда
-    
+
 Клиент отправляет команду принятия звонка:
-    
+
 ```json
 {
   "command": "accept-call",
@@ -798,7 +798,7 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
   }
 }
 ```
-    
+
 Сервер отвечает:
 ```json
 {
@@ -811,7 +811,7 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
   "type": "response"
 }
 ```
-    
+
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `command` | string | `"accept-call"` |
@@ -820,20 +820,20 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
 | `mediaSettings.isVideoEnabled` | bool | Включена ли камера |
 | `mediaSettings.isScreenSharingEnabled` | bool | Демонстрация экрана |
 | `mediaSettings.isAnimojiEnabled` | bool | Animoji |
-    
+
 ### get-rooms
-    
+
 После accept-call клиент может запросить список комнат (возвращает пустой ответ):
-    
+
 ```json
 {"command": "get-rooms", "sequence": 2, "withParticipants": false}
 → {"stamp": 0, "sequence": 2, "response": "get-rooms", "type": "response"}
 ```
-    
+
 ### change-media-settings
-    
+
 Обновление настроек микрофона/камеры:
-    
+
 ```json
 {
   "command": "change-media-settings",
@@ -849,13 +849,13 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
 }
 → {"stamp": 0, "sequence": 3, "response": "change-media-settings", "type": "response"}
 ```
-    
+
 ### SDP Answer
-    
+
 После confirmation клиент отправляет свой SDP (WebRTC answer) обратно
 через signaling WebSocket. Сообщение содержит поле `sdp` (без обёртки
 `transmitted-data`):
-    
+
 ```json
 {
   "sdp": {
@@ -864,16 +864,16 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
   }
 }
 ```
-    
+
 Ответ подтверждается через:
 ```json
 {"stamp": 0, "sequence": 4, "response": "transmit-data", "type": "response"}
 ```
-    
+
 ### ICE Candidates
-    
+
 Каждый ICE candidate отправляется отдельно и подтверждается RESPONSE:
-    
+
 ```json
 {
   "candidate": {
@@ -885,7 +885,7 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
 }
 → {"stamp": 0, "sequence": N, "response": "transmit-data", "type": "response"}
 ```
-    
+
 **Особенности:**
 - Каждый candidate — отдельное сообщение (не батч)
 - Каждый candidate подтверждается RESPONSE с уникальным `sequence`
@@ -897,7 +897,7 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
 - `srflx` — внешний IP (NAT)
 - `relay` — TURN релей (155.212.x.x)
 - `tcp` — TCP fallback
-    
+
 ### media-settings-changed — уведомление от другого участника
 
 Когда **другой** участник звонка меняет настройки микрофона/камеры,
@@ -947,9 +947,9 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
 - `ss` — layout-режим (вероятно, "screen share" или "single speaker")
 
 ### feature-set-changed
-    
+
 После подключения всех участников сервер обновляет фичи конференции:
-    
+
 ```json
 {
   "stamp": 1781893455474000001,
@@ -958,7 +958,7 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
   "type": "notification"
 }
 ```
-    
+
 ### custom-data — статистика качества сети
 
 Клиент периодически отправляет отчёт о качестве сети через команду
@@ -988,9 +988,9 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
 
 `participantId: null` — статистика для всей конференции, а не для
 конкретного участника.
-    
+
 ### Подключение к активному звонку
-    
+
 Проверено экспериментально: можно подключиться к **уже идущему** звонку
 (conversation state = `ACTIVE`). Сервер не кикает дополнительное
 подключение от того же участника — отдаёт ServerHello с полными данными

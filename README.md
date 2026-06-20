@@ -124,7 +124,9 @@ python3 scripts/example.py
 | 18 | CODE_ENTER | Подтверждение кода из SMS |
 | 19 | LOGIN | Авторизация |
 | 25 | GET_PRESET_AVATARS | Пресеты аватаров |
-| 26 | GET_PRESETS | Стикеры, эмодзи, реакции |
+| 26 | STICKER_SYNC | Синхронизация наборов стикеров |
+| 27 | STICKER_DATA | Данные стикеров, реакций, анимодзи |
+| 28 | ANIMOJI_AND_STICKER_GET | Загрузка объектов стикеров/анимодзи |
 | 49 | GET_HISTORY | История сообщений |
 | 53 | GET_CHATS | Список чатов |
 | 55 | VOID | Heartbeat чатов / заглушка |

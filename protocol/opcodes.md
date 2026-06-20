@@ -26,7 +26,7 @@
 | 18 | CODE_ENTER | 1 | `{token, verifyCode, authTokenType}` | [auth.md](auth.md) |
 | 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | [auth.md](auth.md) |
 | 101 | CONFIG | 1 | `{}` или `{"interactive": true}` | [contacts.md](contacts.md) — конфигурация сервера |
-| 200 | SERVER_TIME | 1 | — | — |
+| 200 | SERVER_TIME | 1 | — | Получение серверного времени (unix timestamp, мс) |
 | 302 | GET_BANNERS | 1 | `{bannersSync: 0}` | [contacts.md](contacts.md) |
 
 ### Сообщения
@@ -40,8 +40,8 @@
 | 64 | MSG_SEND | 1 | [messaging.md](messaging.md) |
 | 65 | MSG_TYPING | 1 | [messaging.md](messaging.md) |
 | 66 | MSG_DELETE | 1 | [messaging.md](messaging.md) |
-| 67 | MSG_FORWARD | 3* | [messaging.md](messaging.md) |
-| 68 | MSG_FWD | 3* | [messaging.md](messaging.md) |
+| 67 | MSG_EDIT | 1 | [messaging.md](messaging.md) — редактирование сообщения |
+| 68 | MSG_FWD | 3* | [messaging.md](messaging.md) — deprecated, возвращает ошибку |
 | 70 | FORWARD_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 73 | SEARCH_MESSAGES | 1 | [messaging.md](messaging.md) |
@@ -51,7 +51,7 @@
 | 180 | GET_REACTIONS_BULK | 1 | [messaging.md](messaging.md) |
 | 181 | GET_REACTIONS | 1 | [messaging.md](messaging.md) |
 
-\* — возвращает ошибку при неполном payload.
+\* — возвращает ошибку при неполном payload (deprecated опкоды).
 
 ### Чаты и контакты
 
@@ -81,10 +81,11 @@
 | 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
 | 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md#image_upload_iusmile-opcode-81) — iusmile.oneme.ru |
 | 82 | VIDEO_UPLOAD_URL | 1 | [chats.md](chats.md) — vu.okcdn.ru |
-| 83 | CALL_LEAVE | 3* | [calls.md](calls.md) — завершение звонка |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
 | 96 | GET_SESSIONS | 1 | [contacts.md](contacts.md) |
 | 106 | GET_BOT_INFO | 3* | [contacts.md](contacts.md) — поиск бота по `botId` |
+
+> **⚠️ GET_VIDEO_URL** (файлы): задокументирован в [files.md](files.md), но его номер opcode не установлен. Возможно `83`, но этот номер занят `CALL_LEAVE`. Требуется независимая проверка.
 
 ### Звонки (голосовые и видеозвонки)
 
@@ -115,11 +116,8 @@ CALL_EDIT (69) работает только для звонков, создан
 
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
-| 5 | NAV_ANALYTICS | 1 | Аналитические события. Payload: `{"events": [{type, event, ...}]}`. |
-| 55 | VOID | 1 | Заглушка. Требует `{"chatId": int}`. Возвращает cmd=1 без payload. |
 | 100 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload=null` с любым payload. |
 | 103 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload={}` с любым payload. |
-| 200 | SERVER_TIME | 1 | Получение серверного времени. |
 
 ### Push-уведомления (cmd=0)
 

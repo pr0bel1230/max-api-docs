@@ -194,12 +194,12 @@ while True:
     frame = recv_frame(sock)
     cmd = frame['cmd']
     opcode = frame['opcode']
-    
+
     if cmd == 0:
         # Это push — обработать или пропустить
         handle_push(opcode, frame['payload'])
         continue
-    
+
     if cmd == 1:
         # Это ответ на запрос
         process_response(opcode, frame['payload'])
