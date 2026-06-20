@@ -15,31 +15,33 @@
 {
   "userAgent": {
     "deviceType": "WEB",
+    "pushDeviceType": "WEBPUSH",
     "locale": "ru",
     "deviceLocale": "ru",
-    "osVersion": "Linux",
-    "deviceName": "Firefox",
-    "headerUserAgent": "Mozilla/5.0 ...",
-    "appVersion": "25.11.1",
-    "screen": "1080x1920 1.0x",
-    "timezone": "Asia/Yekaterinburg"
+    "osVersion": "macOS",
+    "deviceName": "Yandex Browser",
+    "headerUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 YaBrowser/26.4.0.0 Safari/537.36",
+    "appVersion": "26.6.17",
+    "screen": "956x1470 2.0x",
+    "timezone": "Europe/Moscow"
   },
-  "deviceId": "<device_id>"
+  "deviceId": "<UUID>"
 }
 ```
 
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `userAgent.deviceType` | string | Всегда `WEB` |
+| `userAgent.pushDeviceType` | string | Тип push (`WEBPUSH`) |
 | `userAgent.locale` | string | Язык интерфейса (`ru`) |
 | `userAgent.deviceLocale` | string | Локаль устройства (`ru`) |
-| `userAgent.osVersion` | string | ОС клиента (`Linux`) |
-| `userAgent.deviceName` | string | Название браузера (`Firefox`) |
+| `userAgent.osVersion` | string | ОС клиента (`macOS`, `Linux`) |
+| `userAgent.deviceName` | string | Название браузера (`Yandex Browser`, `Firefox`) |
 | `userAgent.headerUserAgent` | string | User-Agent из HTTP-заголовка |
-| `userAgent.appVersion` | string | Версия приложения (25.11.1) |
-| `userAgent.screen` | string | Разрешение экрана и плотность (`1080x1920 1.0x`) |
-| `userAgent.timezone` | string | Временная зона (`Asia/Yekaterinburg`) |
-| `deviceId` | string | Уникальный ID устройства |
+| `userAgent.appVersion` | string | Версия приложения (`26.6.17`) |
+| `userAgent.screen` | string | Разрешение экрана и плотность (`956x1470 2.0x`) |
+| `userAgent.timezone` | string | Временная зона (`Europe/Moscow`) |
+| `deviceId` | string | Уникальный ID устройства (UUID) |
 
 ### Ответ
 
@@ -47,8 +49,12 @@
 cmd=1 opcode=6
 ```
 
-Ответ содержит ведущие ints (`-16, 75`) и объект с данными сессии.
-Payload невелик — несколько десятков байт.
+Ответ INIT может различаться в зависимости от контекста:
+
+- **Перед LOGIN** (авторизованный пользователь) — возвращает данные сессии
+- **Для неавторизованного пользователя** — возвращает конфигурацию сервера
+  (те же поля, что CONFIG opcode 101): `phone-auth-enabled`, `location`,
+  `lang`, `web-pwa-promo`, `reg-country-code`
 
 ### Особенности TCP
 
@@ -199,7 +205,7 @@ for _ in range(10):
 
 ---
 
-## Альтернативная авторизация: SMS (opcode 17 и 18)
+## Альтернативная авторизация: SMS (opcode 17, 18)
 
 MAX поддерживает авторизацию через SMS на номер телефона. Это
 альтернатива токену из браузера — может быть полезна для тестирования
@@ -207,8 +213,45 @@ MAX поддерживает авторизацию через SMS на номе
 
 Процесс:
 ```
-VERIFICATION_REQUEST (17) → SMS с кодом → CODE_ENTER (18) → access_token
+CAPTCHA_REQUEST (224) → капча → VERIFICATION_REQUEST (17) → SMS с кодом → CODE_ENTER (18) → access_token → LOGIN (19)
 ```
+
+Перед отправкой SMS может потребоваться пройти VK Captcha (опционально,
+зависит от частоты запросов). Если капча не требуется — VERIFICATION_REQUEST
+можно вызывать сразу.
+
+### 0. CAPTCHA_REQUEST (opcode 224)
+
+Запрос VK Captcha для подтверждения, что запрос от человека.
+
+Является частью инфраструктуры VK ID, встроенной в MAX.
+
+**Запрос:**
+```json
+{
+  "source": "auth",
+  "identifier": "+71234567890"
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `source` | string | Всегда `"auth"` |
+| `identifier` | string | Номер телефона в международном формате |
+
+**Ответ:**
+```json
+{
+  "link": "https://id.vk.ru/not_robot_captcha?domain=web.max.ru&session_token=eyJ..."
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `link` | string | URL капчи VK ID для прохождения в браузере |
+
+После прохождения капчи браузер получает `captchaToken`, который
+передаётся в VERIFICATION_REQUEST.
 
 ### 1. VERIFICATION_REQUEST (opcode 17)
 
@@ -219,29 +262,43 @@ VERIFICATION_REQUEST (17) → SMS с кодом → CODE_ENTER (18) → access_t
 {
   "phone": "+71234567890",
   "type": "START_AUTH",
-  "language": "ru"
+  "language": "ru",
+  "captchaToken": "eyJ..."
 }
 ```
 
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `phone` | string | Номер телефона в международном формате |
-| `type` | string | Всегда `"START_AUTH"` |
+| `type` | string | `"START_AUTH"` или `"RESEND"` |
 | `language` | string | Язык SMS-сообщения (`"ru"`) |
+| `captchaToken` | string | (Опционально) токен после прохождения VK Captcha |
+
+Поле `type`:
+- `"START_AUTH"` — первый запрос кода
+- `"RESEND"` — повторная отправка (если код не пришёл или истёк)
 
 **Ответ:**
 ```json
 {
-  "token": "uuid-токен-для-подтверждения"
+  "requestMaxDuration": 60000,
+  "requestCountLeft": 10,
+  "altActionDuration": 60000,
+  "codeLength": 6,
+  "token": "An_..."
 }
 ```
 
 | Поле | Тип | Описание |
 |------|-----|----------|
-| `token` | string | UUID — временный токен для следующего шага |
+| `token` | string | Токен для CODE_ENTER (длинная строка, начинается с `An_`) |
+| `codeLength` | int | Длина кода подтверждения (6) |
+| `requestMaxDuration` | int | Макс. время ожидания ввода кода (мс) |
+| `requestCountLeft` | int | Сколько осталось попыток запроса кода |
+| `altActionDuration` | int | Длительность альтернативного действия (мс) |
 
 **Примечание:** После успешного запроса на указанный номер приходит
-SMS с 4-значным кодом подтверждения.
+SMS с 6-значным кодом подтверждения.
 
 ### 2. CODE_ENTER (opcode 18)
 
@@ -250,8 +307,8 @@ SMS с 4-значным кодом подтверждения.
 **Запрос:**
 ```json
 {
-  "token": "uuid-из-VerificationRequest",
-  "verifyCode": "1234",
+  "token": "An_...",
+  "verifyCode": "504940",
   "authTokenType": "CHECK_CODE"
 }
 ```
@@ -259,10 +316,10 @@ SMS с 4-значным кодом подтверждения.
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `token` | string | Токен из ответа VERIFICATION_REQUEST |
-| `verifyCode` | string | 4-значный код из SMS |
-| `authTokenType` | string | Всегда `"CHECK_CODE"` |
+| `verifyCode` | string | 6-значный код из SMS |
+| `authTokenType` | string | `"CHECK_CODE"` |
 
-**Ответ:**
+**Ответ (успех):**
 ```json
 {
   "tokenAttrs": {
@@ -276,6 +333,20 @@ SMS с 4-значным кодом подтверждения.
 | Поле | Тип | Описание |
 |------|-----|----------|
 | `tokenAttrs.LOGIN.token` | string | Токен доступа для LOGIN (opcode 19) |
+
+**Ответ (ошибка):**
+```json
+{
+  "localizedMessage": "Пользователь заблокирован или удалён",
+  "error": "auth.blocked",
+  "message": "Key: error.user.recovery.not.available"
+}
+```
+
+| Код ошибки | Описание |
+|------------|----------|
+| `auth.blocked` | Аккаунт пользователя заблокирован |
+| `auth.invalid.code` | Неверный код подтверждения |
 
 Полученный токен можно использовать в LOGIN (opcode 19) для
 полноценной авторизации.
@@ -323,10 +394,155 @@ ws.recv()  # LOGIN OK
 после INIT (opcode 6). Перед VERIFICATION_REQUEST не нужен LOGIN —
 это этап, предшествующий авторизации.
 
+## QR-авторизация (opcode 288, 289)
+
+MAX поддерживает вход через QR-код — альтернатива SMS и токену.
+Клиент запрашивает QR-код, пользователь сканирует его приложением
+MAX на телефоне, после чего клиент получает токен доступа.
+
+Процесс:
+```
+INIT (6) → QR_AUTH_REQUEST (288) → QR код → пользователь сканирует →
+QR_AUTH_POLL (289) в цикле → CODE_ENTER (18) → LOGIN (19)
+```
+
+### 1. QR_AUTH_REQUEST (opcode 288)
+
+Запрос на получение QR-кода для авторизации.
+
+**Запрос:**
+```json
+{}
+```
+
+Пустой object. Никаких дополнительных полей не требуется.
+
+**Ответ:**
+```json
+{
+  "qrLink": "https://qr.max.ru/?token=eyJ...",
+  "trackId": "uuid-трекера",
+  "pollingInterval": 5000,
+  "ttl": 119994,
+  "expiresAt": 1782002818830
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `qrLink` | string | URL QR-кода для отображения |
+| `trackId` | string | UUID для отслеживания статуса |
+| `pollingInterval` | int | Интервал опроса статуса (мс) |
+| `ttl` | int | Время жизни QR-кода (мс) |
+| `expiresAt` | int | Unix timestamp истечения (мс) |
+
+### 2. QR_AUTH_POLL (opcode 289)
+
+Опрос статуса QR-авторизации. Вызывается в цикле с интервалом
+`pollingInterval`, пока QR-код не будет отсканирован или не истечёт.
+
+**Запрос:**
+```json
+{
+  "trackId": "uuid-из-QR_AUTH_REQUEST"
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `trackId` | string | UUID из ответа QR_AUTH_REQUEST |
+
+**Ответ (в процессе):**
+```json
+{
+  "status": {
+    "expiresAt": 1782002818830
+  }
+}
+```
+
+Команда `cmd=0` (push-уведомление) — ожидание продолжается.
+
+**Ответ (ошибка):**
+```json
+{
+  "error": "track.not.found"
+}
+```
+
+Ошибка `track.not.found` означает, что QR-код истёк или был
+отсканирован ранее. В этом случае нужно запросить новый QR-код.
+
+### 3. Завершение QR-авторизации
+
+После успешного сканирования QR-кода сервер присылает
+push-уведомление (cmd=0) с opcode 18 (CODE_ENTER), содержащее
+токен доступа, аналогично SMS-флоу:
+
+```json
+{
+  "cmd": 0,
+  "opcode": 18,
+  "payload": {
+    "tokenAttrs": {
+      "LOGIN": {
+        "token": "access_token_для_LOGIN"
+      }
+    }
+  }
+}
+```
+
+Полученный токен используется в LOGIN (opcode 19) для полноценной
+авторизации.
+
+### Полный цикл QR-авторизации
+
+```python
+# 1. INIT
+ws.send(req(6, {"deviceId": device_id, "userAgent": {...}}))
+ws.recv()  # INIT OK
+
+# 2. Запрос QR
+ws.send(req(288, {}))
+resp = json.loads(ws.recv())
+qr_data = resp["payload"]
+track_id = qr_data["trackId"]
+poll_interval = qr_data["pollingInterval"]
+print(f"QR URL: {qr_data['qrLink']}")
+
+# 3. Ожидание сканирования
+import time
+while True:
+    time.sleep(poll_interval / 1000)
+    ws.send(req(289, {"trackId": track_id}))
+    resp = json.loads(ws.recv())
+    if resp.get("cmd") == 0 and resp.get("opcode") == 18:
+        # QR отсканирован, получен токен
+        access_token = resp["payload"]["tokenAttrs"]["LOGIN"]["token"]
+        print(f"Токен доступа: {access_token}")
+        break
+    elif resp.get("cmd") == 3:
+        print(f"Ошибка: {resp}")
+        break
+
+# 4. LOGIN
+ws.send(req(19, {
+    "token": access_token,
+    "interactive": True,
+    "chatsCount": 100,
+    "chatsSync": 100,
+}))
+ws.recv()  # LOGIN OK
+```
+
 ## Возможные ошибки
 
 | Симптом | Причина |
 |---------|---------|
 | `cmd=3` на LOGIN | Неверный или истёкший токен |
+| `cmd=3` с `error: "auth.blocked"` на CODE_ENTER (18) | Аккаунт пользователя заблокирован |
+| `cmd=3` с `error: "auth.invalid.code"` на CODE_ENTER (18) | Неверный код подтверждения |
+| `cmd=3` с `error: "track.not.found"` на QR_AUTH_POLL (289) | QR-код истёк или уже использован |
 | Таймаут на INIT | Закончились соединения или IP заблокирован |
 | `cmd=3` на любой запрос | Сессия не инициализирована (пропущен INIT/LOGIN) |

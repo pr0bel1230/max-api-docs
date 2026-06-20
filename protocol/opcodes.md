@@ -4,7 +4,7 @@
 Совместимы с WebSocket (ver=11, JSON).
 
 Подробная документация по группам опкодов:
-- [Аутентификация](auth.md) — INIT, LOGIN, VERIFICATION_REQUEST, CODE_ENTER
+- [Аутентификация](auth.md) — INIT, LOGIN, VERIFICATION_REQUEST, CODE_ENTER, QR, CAPTCHA
 - [Сообщения](messaging.md) — MSG_SEND, MSG_DELETE, MSG_EDIT, MSG_FWD, GET_HISTORY, GET_MESSAGE, SEARCH
 - [Чаты](chats.md) — GET_CHATS, CHAT_ACTION, CHAT_OPERATION, GET_STATS, IMAGE_UPLOAD_URL
 - [Контакты](contacts.md) — GET_CONTACTS, CONTACTS_PRESENCE, GET_BLOCKED, GET_USERINFO, GET_COMMON_CHATS, GET_SESSIONS, GET_BANNERS
@@ -26,6 +26,9 @@
 | 18 | CODE_ENTER | 1 | `{token, verifyCode, authTokenType}` | [auth.md](auth.md) |
 | 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | [auth.md](auth.md) |
 | 101 | CONFIG | 1 | `{}` или `{"interactive": true}` | [contacts.md](contacts.md) — конфигурация сервера |
+| 224 | CAPTCHA_REQUEST | 1 | `{source, identifier}` | [auth.md](auth.md) — VK Captcha |
+| 288 | QR_AUTH_REQUEST | 1 | `{}` | [auth.md](auth.md) — QR-код для входа |
+| 289 | QR_AUTH_POLL | 1 | `{trackId}` | [auth.md](auth.md) — опрос статуса QR |
 | 200 | SERVER_TIME | 1 | — | Получение серверного времени (unix timestamp, мс) |
 | 302 | GET_BANNERS | 1 | `{bannersSync: 0}` | [contacts.md](contacts.md) |
 
