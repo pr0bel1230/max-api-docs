@@ -30,7 +30,7 @@
 | `cid` | int | Client ID — идентификатор для дедупликации |
 | `text` | string | Текст сообщения |
 | `elements` | array | Rich-элементы (см. [elements.md](elements.md)) |
-| `attaches` | array | Вложения: `PHOTO`, `VIDEO`, `FILE`, `AUDIO`, `SHARE`, `CONTROL`, `CALL`; для каналов может содержать `keyboard` (INLINE_KEYBOARD) (см. [files.md](files.md)) |
+| `attaches` | array | Вложения: `PHOTO`, `VIDEO`, `FILE`, `UNSUPPORTED`, `SHARE`, `CONTROL`, `CALL`; для каналов может содержать `keyboard` (INLINE_KEYBOARD) (см. [files.md](files.md)) |
 | `reactionInfo` | object | Реакции на сообщение |
 | `stats` | object | Статистика (только CHANNEL): `{"views": 1009}` |
 | `status` | string | Статус: `EDITED` |
@@ -681,7 +681,7 @@ GET_REACTIONS (181) возвращает детальный список `reacti
 |------|-----|----------|
 | `chatId` | int | ID чата |
 | `messageId` | string | ID опорного сообщения, вокруг которого искать медиа |
-| `attachTypes` | array[string] | Типы вложений: `PHOTO`, `VIDEO`, `FILE`, `AUDIO`, `SHARE` |
+| `attachTypes` | array[string] | Типы вложений: `PHOTO`, `VIDEO`, `FILE`, `UNSUPPORTED`, `AUDIO`, `SHARE` |
 | `forward` | int | Количество сообщений с медиа вперёд от опорного |
 | `backward` | int | Количество сообщений с медиа назад от опорного |
 
@@ -709,6 +709,53 @@ GET_REACTIONS (181) возвращает детальный список `reacti
   не общее. Если между двумя медиа-сообщениями 10 текстовых, они
   пропускаются.
 - Опорное сообщение задаёт точку отсчёта — медиа до и после неё
+
+### GET_MEDIA с type/query (GIPHY, GIF, STICKER)
+
+GET_MEDIA (51) также используется для поиска GIF-изображений и стикеров
+через внешние интеграции. Формат запроса отличается от стандартного:
+
+```json
+{
+  "type": "GIPHY",
+  "query": "cat",
+  "limit": 3,
+  "chatId": 7268926
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `type` | string | Тип поиска: `"GIPHY"`, `"GIF"`, `"STICKER"`, `"ANIMOJI"` |
+| `query` | string | Поисковый запрос (для GIPHY/GIF) |
+| `limit` | int | Количество результатов (макс. не установлен) |
+| `chatId` | int | **Обязательно** — ID чата (без него — ошибка валидации) |
+
+### Ответ (type/query)
+
+```json
+{
+  "messages": [],
+  "total": 62
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `messages` | array | Найденные медиа-объекты (может быть пустым) |
+| `total` | int | Общее количество результатов поиска |
+
+### Особенности
+
+- Поле `chatId` **обязательно** — без него сервер возвращает `cmd=3`
+  с ошибкой `"Field requirement failed: chatId"`
+- Для GIPHY/GIF возвращает `total: 62` независимо от запроса —
+  возможно, это ограничение сервера или заглушка
+- Для STICKER/ANIMOJI также требуется `chatId`, поле `query` не нужно
+- Полный формат объектов в `messages` не установлен — при тестировании
+  возвращается пустой массив
+- `cursor` для пагинации передаётся как строка (пустая строка для
+  первого запроса), но на момент исследования не влияет на результат
 
 ## GET_HISTORY (opcode 49)
 

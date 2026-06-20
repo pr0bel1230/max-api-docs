@@ -25,6 +25,7 @@
 | 17 | VERIFICATION_REQUEST | 1 | `{phone, type, language}` | [auth.md](auth.md) |
 | 18 | CODE_ENTER | 1 | `{token, verifyCode, authTokenType}` | [auth.md](auth.md) |
 | 19 | LOGIN | 1 | `{token, interactive, chatsCount, ...}` | [auth.md](auth.md) |
+| 101 | CONFIG | 1 | `{}` или `{"interactive": true}` | [contacts.md](contacts.md) — конфигурация сервера |
 | 200 | SERVER_TIME | 1 | — | — |
 | 302 | GET_BANNERS | 1 | `{bannersSync: 0}` | [contacts.md](contacts.md) |
 
@@ -83,6 +84,7 @@
 | 83 | CALL_LEAVE | 3* | [calls.md](calls.md) — завершение звонка |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
 | 96 | GET_SESSIONS | 1 | [contacts.md](contacts.md) |
+| 106 | GET_BOT_INFO | 3* | [contacts.md](contacts.md) — поиск бота по `botId` |
 
 ### Звонки (голосовые и видеозвонки)
 
@@ -114,7 +116,7 @@ CALL_EDIT (69) работает только для звонков, создан
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 5 | NAV_ANALYTICS | 1 | Аналитические события. Payload: `{"events": [{type, event, ...}]}`. |
-| 55 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload=null` с `{chatId}`. |
+| 55 | VOID | 1 | Заглушка. Требует `{"chatId": int}`. Возвращает cmd=1 без payload. |
 | 100 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload=null` с любым payload. |
 | 103 | VOID | 1 | Заглушка. Возвращает `cmd=1 payload={}` с любым payload. |
 | 200 | SERVER_TIME | 1 | Получение серверного времени. |
@@ -124,6 +126,8 @@ CALL_EDIT (69) работает только для звонков, создан
 **Важно:** push-опкоды работают **только как уведомления** (сервер → клиент).
 Их нельзя использовать как запросы (клиент → сервер) — большинство
 возвращает `"Unknown opcode"` при попытке отправки.
+
+Исключения: **144** и **145** работают и как запросы (см. ниже).
 
 | Опкод | Название | Описание | Документация |
 |-------|----------|----------|-------------|
@@ -135,6 +139,8 @@ CALL_EDIT (69) работает только для звонков, создан
 | 137 | NOTIF_INCOMING_CALL | Уведомление о входящем звонке | [calls.md](calls.md) |
 | 140 | NOTIF_MSG_DELETE_RANGE | Уведомление о массовом удалении | [push.md](push.md) |
 | 142 | NOTIF_MSG_DELETE | Уведомление об удалении сообщения | [push.md](push.md) |
+| 144 | GET_CONTACTS_V2 | **Запрос:** контакты чата по `{"chatId": int}` | [contacts.md](contacts.md) |
+| 145 | PRESENCE_GET | **Запрос:** получить присутствие по `{"interactive": true}` | [contacts.md](contacts.md) |
 | 156 | NOTIF_REACTION | Уведомление о реакции на сообщение | [messaging.md](messaging.md) |
 
 ## Коды ответа cmd

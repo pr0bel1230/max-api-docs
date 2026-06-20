@@ -124,6 +124,38 @@ while time.time() < deadline:
 | `name` | string | Имя файла |
 | `size` | int | Размер в байтах |
 
+## UNSUPPORTED-вложения (голосовые сообщения)
+
+Голосовые сообщения приходят в истории с `_type: "UNSUPPORTED"`.
+**Важно:** тип вложения — именно `UNSUPPORTED`, а не `AUDIO`.
+
+```json
+{
+  "_type": "UNSUPPORTED",
+  "duration": 94760,
+  "wave": "data:image/webp;base64,ZXho...",
+  "audioId": 1524997357593,
+  "token": "f9LHodD0cOL7Wb-jd-9JPg46oS1ukLzEMJnrVS7dObsDQXzNFaS_WqqD2R8YQHqH7pP_vQU5l64RNu0JGFzc"
+}
+```
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `_type` | string | Всегда `"UNSUPPORTED"` |
+| `duration` | int | Длительность в миллисекундах |
+| `wave` | string | WebP-изображение波形 (визуализация звука) |
+| `audioId` | int | ID аудиофайла |
+| `token` | string | Токен для доступа к аудио |
+
+### Особенности
+
+- Тип `AUDIO` в attachTypes GET_MEDIA (51) существует, но в реальных
+  сообщениях не встречен — голосовые сообщения передаются как `UNSUPPORTED`
+- `wave` — это не аудио, а визуализация волны в формате WebP (base64)
+- `duration` даётся в миллисекундах (94760 мс ≈ 1.5 минуты)
+- Полный цикл воспроизведения голосового сообщения не исследован
+  (требуется GET_VIDEO_URL? или другой endpoint)
+
 ## Формат в GET_HISTORY
 
 В истории сообщений файлы отображаются в поле `attaches`:
