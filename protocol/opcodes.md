@@ -34,11 +34,13 @@
 |-------|----------|-----|-------------|
 | 49 | GET_HISTORY | 1 | [messaging.md](messaging.md) |
 | 51 | GET_MEDIA | 1 | [messaging.md](messaging.md) |
+| 60 | MSG_SEARCH_GLOBAL | 1 | [messaging.md](messaging.md) |
+| 62 | SEARCH_LIVE_STREAMS | 1 | [messaging.md](messaging.md) |
 | 64 | MSG_SEND | 1 | [messaging.md](messaging.md) |
 | 65 | MSG_TYPING | 1 | [messaging.md](messaging.md) |
 | 66 | MSG_DELETE | 1 | [messaging.md](messaging.md) |
-| 67 | MSG_EDIT | 1 | [messaging.md](messaging.md) |
-| 68 | MSG_FWD | 3 | [messaging.md](messaging.md) |
+| 67 | MSG_FORWARD | 3* | [messaging.md](messaging.md) |
+| 68 | MSG_FWD | 3* | [messaging.md](messaging.md) |
 | 70 | FORWARD_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 71 | GET_MESSAGE | 1 | [messaging.md](messaging.md) |
 | 73 | SEARCH_MESSAGES | 1 | [messaging.md](messaging.md) |
@@ -48,7 +50,7 @@
 | 180 | GET_REACTIONS_BULK | 1 | [messaging.md](messaging.md) |
 | 181 | GET_REACTIONS | 1 | [messaging.md](messaging.md) |
 
-\* — на момент исследования. Возможно, требуется другой payload.
+\* — возвращает ошибку при неполном payload.
 
 ### Чаты и контакты
 
@@ -65,7 +67,6 @@
 | 72 | CHAT_ACTION | 1 | [chats.md](chats.md) |
 | 74 | GET_STATS | 1 | [chats.md](chats.md) |
 | 75 | CHAT_SUBSCRIBE | 1 | [chats.md](chats.md) |
-| 84 | CHAT_SUBSCRIBE_BULK | 1 | [chats.md](chats.md#chat_subscribe_bulk-opcode-84) |
 | 77 | CHAT_OPERATION | 1 | [chats.md](chats.md) |
 | 86 | CHAT_SHOW | 1 | [chats.md](chats.md) |
 | 177 | GET_USERINFO | 1 | [contacts.md](contacts.md) |
@@ -78,7 +79,8 @@
 |-------|----------|-----|-------------|
 | 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
 | 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md#image_upload_iusmile-opcode-81) — iusmile.oneme.ru |
-| 83 | GET_VIDEO_URL | 1 | [files.md](files.md) |
+| 82 | VIDEO_UPLOAD_URL | 1 | [chats.md](chats.md) — vu.okcdn.ru |
+| 83 | CALL_LEAVE | 3* | [calls.md](calls.md) — завершение звонка |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
 | 96 | GET_SESSIONS | 1 | [contacts.md](contacts.md) |
 
@@ -87,8 +89,10 @@
 | Опкод | Название | cmd | Документация |
 |-------|----------|-----|-------------|
 | 69 | CALL_EDIT | 3* | [calls.md](calls.md) |
-| 78 | CALL_START | 3* | [calls.md](calls.md) |
-| 79 | CALL_HISTORY | 1 | [calls.md](calls.md) |
+| 78 | CALL_START | 3* | [calls.md](calls.md) — требуется `conversationId` + `isVideo` |
+| 79 | CALL_HISTORY | 1 | [calls.md](calls.md) — история звонковых событий в чате |
+| 83 | CALL_LEAVE | 3* | [calls.md](calls.md) — требуется `{chatId, messageId}` или `{token}` |
+| 84 | CALL_JOIN_LINK | 3* | [calls.md](calls.md) — CallsServiceImpl.createJoinLink |
 | 158 | CALL_TOKEN | 1 | [calls.md](calls.md) |
 
 \* — возвращает ошибку при неполном payload или для неактивных звонков.

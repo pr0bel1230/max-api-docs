@@ -1442,6 +1442,9 @@ Opcode 5 (NAV_ANALYTICS) используется для логирования 
 | 75 | SUBSCRIBE_CHAT | WS запрос | Подписка на чат (обязательно перед push 137) |
 | 78 | CALL_START | WS запрос | Подключение к звонку (не старт!) |
 | 79 | CALL_HISTORY | WS запрос | История звонков в чате (с пагинацией) |
+| 82 | VIDEO_UPLOAD_URL | WS запрос | Получение URL для загрузки видео (см. [chats.md](chats.md)) |
+| 83 | CALL_LEAVE | WS запрос | Завершение/выход из звонка |
+| 84 | CALL_JOIN_LINK | WS запрос | Создание ссылки-приглашения (CallsServiceImpl.createJoinLink) |
 | 129 | NOTIF_TYPING | WS push | Индикатор набора (перед входящим звонком) |
 | 132 | NOTIF_PRESENCE | WS push | Уведомление о присутствии (push-only!) |
 | 137 | NOTIF_INCOMING_CALL | WS push | Уведомление о входящем звонке |
@@ -1512,9 +1515,73 @@ POST https://calls.okcdn.ru/fb.do
 | Signaling participant ID (звонящий) | 1125899996294935 | ID звонящего в signaling |
 
 
+## CALL_JOIN_LINK (opcode 84)
+
+Создание ссылки-приглашения для присоединения к звонку.
+
+Вызывает `CallsServiceImpl.createJoinLink(conversationId, userId, locale, timezone)`.
+
+### Запрос
+
+```json
+{
+  "conversationId": "7268926_3260455"
+}
+```
+
+| Поле | Тип | Обязательное | Описание |
+|------|-----|-------------|----------|
+| `conversationId` | string | да | ID звонка (строка, может быть в формате `"chatId_userId"`) |
+| `chatIds` | array[int] | нет | Игнорируется |
+| `action` | string | нет | Игнорируется |
+
+### Ошибки
+
+- Без `conversationId`: `"Field requirement failed: conversationId"`
+- С int вместо string: `"Expected string at N"`
+- С несуществующим звонком: `"No call <conversationId>"` — звонок должен быть активен
+
+### Особенности
+
+- `conversationId` может быть в форматах: `"chatId"`, `"chatId_userId"`, UUID звонка
+- Опкод работает только для активных звонков (созданных через официальный клиент или startConversation)
+- Не является подпиской на чат — ранее ошибочно классифицирован как CHAT_SUBSCRIBE_BULK
+
 ---
 
-## Источники
+## CALL_LEAVE (opcode 83)
+
+Завершение звонка / выход из звонка.
+
+### Запрос
+
+```json
+{
+  "chatId": 7268926,
+  "messageId": "0"
+}
+```
+
+| Поле | Тип | Обязательное | Описание |
+|------|-----|-------------|----------|
+| `chatId` | int | да (с messageId) | ID чата |
+| `messageId` | string | да (с chatId) | ID сообщения звонка |
+| `token` | string | да (альтернатива) | Токен звонка |
+
+### Ошибки
+
+- Без параметров: `"[chatId, messageId] or [token] required"`
+- С несуществующим messageId: `"Video N is not accessible"`
+- С некорректным token: `"Unable to find suitable cipher!"`
+
+### Особенности
+
+- Аналог hangupConversation из HTTP API, но через WebSocket
+- Требует либо `{chatId, messageId}`, либо `{token}` — не оба сразу
+- Работает только для звонков, созданных через официальный клиент
+
+
+---
 
 Базовая структура HTTP API звонков и signaling протокола была взята из
 репозитория **[icyfalc0n/maxcalls](https://github.com/icyfalc0n/maxcalls)**
