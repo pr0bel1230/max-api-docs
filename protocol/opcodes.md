@@ -83,7 +83,8 @@
 |-------|----------|-----|-------------|
 | 80 | IMAGE_UPLOAD_URL | 1 | [chats.md](chats.md) |
 | 81 | IMAGE_UPLOAD_IUSMILE | 1 | [chats.md](chats.md#image_upload_iusmile-opcode-81) — iusmile.oneme.ru |
-| 82 | VIDEO_UPLOAD_URL | 1 | [chats.md](chats.md) — vu.okcdn.ru |
+| 82 | VIDEO_UPLOAD_URL / AUDIO_UPLOAD_URL | 1 | [chats.md](chats.md) — video: vu.okcdn.ru, audio: au.oneme.ru. `{chatId, count}` для видео, `{count, type: 2, uploaderType: 1}` для аудио |
+| 83 | CALL_LEAVE | 3* | [calls.md](calls.md) — требуется `{chatId, messageId}` или `{token}` |
 | 87 | FILE_UPLOAD | 1 | [files.md](files.md) |
 | 96 | GET_SESSIONS | 1 | [contacts.md](contacts.md) |
 | 106 | GET_BOT_INFO | 3* | [contacts.md](contacts.md) — поиск бота по `botId` |

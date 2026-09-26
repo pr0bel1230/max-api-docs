@@ -67,8 +67,8 @@ cmd=0 opcode=128
 
 ```json
 {
-  "chatId": 7268926,
-  "userId": 307889134
+  "chatId": 9000000000004,
+  "userId": 9000000000001
 }
 ```
 
@@ -110,7 +110,7 @@ cmd=0 opcode=1 payload={"interactive": true}
     "seen": 1781705573399,
     "status": 1
   },
-  "userId": 307889134
+  "userId": 9000000000001
 }
 ```
 
@@ -156,7 +156,7 @@ Push-уведомление, подтверждающее что сообщен�
   "payload": {
     "setAsUnread": false,
     "chatId": 309052361,
-    "userId": 307889134,
+    "userId": 9000000000001,
     "mark": 1781890447978
   }
 }
@@ -192,7 +192,7 @@ Push-уведомление, подтверждающее что сообщен�
 
 ```json
 {
-  "chatId": 7268926,
+  "chatId": 9000000000004,
   "messageId": "116765779164748382",
   "reactionInfo": {
     "counters": [{"count": 1, "reaction": "👍"}],

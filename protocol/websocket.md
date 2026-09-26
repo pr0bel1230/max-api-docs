@@ -97,7 +97,7 @@ for _ in range(5):
 ws.send(json.dumps({
     "ver": 11, "cmd": 0, "seq": 3, "opcode": 64,
     "payload": {
-        "chatId": 7268926,
+        "chatId": 9000000000004,
         "message": {
             "text": "Привет!",
             "cid": int(time.time() * 1000),
@@ -129,7 +129,7 @@ ws.send(json.dumps({
 ws.send(json.dumps({
     "ver": 11, "cmd": 0, "seq": 4, "opcode": 66,
     "payload": {
-        "chatId": 7268926,
+        "chatId": 9000000000004,
         "messageIds": [116762203424780659],
         "forMe": False
     }

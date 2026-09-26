@@ -11,7 +11,7 @@
 {
   "profile": {
     "contact": {
-      "id": 3260455,
+      "id": 9000000000003,
       "names": [
         {"name": "Имя Фамилия", "type": "FULL_NAME"}
       ],
@@ -59,7 +59,7 @@
 
 ```json
 {
-  "contactIds": [3260455, 3260456, 3260457]
+  "contactIds": [9000000000003, 3260456, 3260457]
 }
 ```
 
@@ -69,7 +69,7 @@
 {
   "contacts": [
     {
-      "id": 3260455,
+      "id": 9000000000003,
       "names": [{"name": "Имя", "type": "FULL_NAME"}],
       "about": "статус",
       "phones": [{"number": "+71234567890", "type": "MOBILE"}],
@@ -93,7 +93,7 @@
 
 ```json
 {
-  "contactIds": [307889134, 6236697]
+  "contactIds": [9000000000001, 9000000000002]
 }
 ```
 
@@ -106,10 +106,10 @@
 ```json
 {
   "presence": {
-    "307889134": {
+    "9000000000001": {
       "seen": 1781705573399
     },
-    "6236697": {
+    "9000000000002": {
       "seen": 1781705461985
     }
   }
@@ -173,7 +173,7 @@
 
 ```json
 {
-  "userId": 6236697,
+  "userId": 9000000000002,
   "time": 0
 }
 ```
@@ -217,7 +217,7 @@ Payload: null (cmd=1)
 
 ```json
 {
-  "userIds": [6236697]
+  "userIds": [9000000000002]
 }
 ```
 
@@ -232,16 +232,16 @@ Payload: null (cmd=1)
   "hasMore": false,
   "commonChats": [
     {
-      "owner": 3260455,
+      "owner": 9000000000003,
       "joinTime": 1,
       "created": 1,
       "lastMessage": { ... },
       "type": "DIALOG",
       "modified": 1781686441819,
       "lastEventTime": 1781686441819,
-      "id": 7268926,
+      "id": 9000000000004,
       "status": "ACTIVE",
-      "participants": { "3260455": ..., "6236697": ... }
+      "participants": { "9000000000003": ..., "9000000000002": ... }
     }
   ]
 }
@@ -414,7 +414,7 @@ Payload: null (cmd=1)
 
 ```json
 {
-  "chatId": 7268926
+  "chatId": 9000000000004
 }
 ```
 

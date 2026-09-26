@@ -119,7 +119,7 @@ send_frame(sock, 10, 0, seq, 19, {
 ```python
 seq += 1
 send_frame(sock, 10, 0, seq, 66, {
-    "chatId": 7268926,
+    "chatId": 9000000000004,
     "messageIds": [116762203424780659],
     "forMe": False
 })

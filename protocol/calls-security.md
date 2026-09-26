@@ -88,7 +88,7 @@ MAX access_token ──→ opcode 158 ──→ call token ($...)
 `auth.anonymLogin` на `calls.okcdn.ru` создаёт сессию звонков:
 - `uid` — внутренний signaling ID (`910111054239`)
 - `session_key` — ключ для всех последующих запросов к HTTP API
-- `external_user_id` — ваш MAX userId (`3260455`)
+- `external_user_id` — ваш MAX userId (`9000000000003`)
 
 **Именно на этом уровне формируется привязка:** signaling uid → MAX user.
 
@@ -320,7 +320,7 @@ wss://videowebrtc.okcdn.ru/ws2
 
 Важный момент: push **opcode 137** сервер отправляет **не всем**,
 а адресно — только тому MAX userId, **на кого звонят**. Ваш
-access token привязан к вашему userId (3260455). Вы получаете
+access token привязан к вашему userId (9000000000003). Вы получаете
 только свои пуши. Чужие 137 вы не увидите никогда.
 
 Даже если вы слушаете ту же WS (`ws-api.oneme.ru`), сервер

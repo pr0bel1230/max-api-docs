@@ -115,6 +115,28 @@ python3 scripts/example.py
 5. Первое сообщение (INIT, opcode=6) → payload содержит `deviceId`
 6. Второе сообщение (LOGIN, opcode=19) → payload содержит `token`
 
+---
+
+## Авторизация через SMS (без браузера)
+
+Скрипт [scripts/max_auth_sms.py](scripts/max_auth_sms.py) выполняет полный цикл авторизации через SMS (опкоды 17 → 18) без ручного копирования токенов:
+
+```bash
+pip install websocket-client certifi
+python3 scripts/max_auth_sms.py
+```
+
+**Что делает скрипт:**
+1. Генерирует/загружает `device_id` (UUID)
+2. Запрашивает номер телефона
+3. Отправляет `VERIFICATION_REQUEST` (opcode 17) — сервер шлёт SMS
+4. Ждёт ввод 4-значного кода из SMS
+5. Отправляет `CODE_ENTER` (opcode 18) — получает `access_token`
+6. Выполняет `LOGIN` (opcode 19) — полноценная авторизация
+7. Сохраняет всё в `~/claude-home/config/max_config.json`
+
+Подробнее: [scripts/README_AUTH_SMS.md](scripts/README_AUTH_SMS.md)
+
 ## Основные опкоды
 
 | Опкод | Команда | Назначение |
@@ -170,7 +192,10 @@ python3 scripts/example.py
   - [openmax-server](https://github.com/openmax-team/server)
   - [python-max-client](https://pypi.org/project/python-max-client/)
   - [madmax](https://pypi.org/project/madmax/)
+- **[kopley8-jpg](https://github.com/kopley8-jpg)** — разобрался с бинарным транспортом MAX (`api.oneme.ru/websocket`, MessagePack вместо JSON), в том числе как упаковываются 64-битные числа (extension type 1 для `chatId` и `videoId`). Также помог выяснить отправку голосовых: отдельный вариант opcode 82 с загрузкой на `au.oneme.ru/uploadAudio`, вложения с типом `AUDIO` (а не `UNSUPPORTED`), и поле `wave` из 80 сырых байт с визуализацией звука.
 
 ## Лицензия
 
-MIT
+Документация распространяется по лицензии [Creative Commons Attribution 4.0 (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
+При использовании материалов репозитория обязательно указать авторство и ссылку на этот репозиторий. Полный текст лицензии — в файле [LICENSE](LICENSE).

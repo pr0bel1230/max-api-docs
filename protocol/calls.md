@@ -12,7 +12,7 @@ API звонков состоит из двух слоёв:
 
 ```json
 {
-  "sender": 3260455,
+  "sender": 9000000000003,
   "id": "115775937927062388",
   "time": 1766600615342,
   "text": "",
@@ -20,11 +20,11 @@ API звонков состоит из двух слоёв:
   "attaches": [
     {
       "duration": 926791,
-      "conversationId": "8daa66c0-04c1-4824-820b-67f92e6fd29d",
+      "conversationId": "<uuid>",
       "hangupType": "HUNGUP",
       "_type": "CALL",
       "callType": "AUDIO",
-      "contactIds": [6236697]
+      "contactIds": [9000000000002]
     }
   ]
 }
@@ -80,18 +80,18 @@ HTTP API (`vchat.startConversation`) **не создают** запись в и�
   "payload": {
     "chatId": 309052361,
     "message": {
-      "sender": 307889134,
+      "sender": 9000000000001,
       "id": "116778126815396519",
       "time": 1781892804190,
       "text": "",
       "type": "USER",
       "attaches": [{
         "duration": 34122,
-        "conversationId": "55B0077C-8944-43B6-9258-F7BBB26AEF10",
+        "conversationId": "<uuid>",
         "hangupType": "HUNGUP",
         "_type": "CALL",
         "callType": "AUDIO",
-        "contactIds": [307889134]
+        "contactIds": [9000000000001]
       }]
     }
   }
@@ -201,7 +201,7 @@ resp = requests.post("https://calls.okcdn.ru/fb.do", data={
   "session_key": "-w-fl0000MtRUXBY1001U9UJGv1000000000w4pyFIoGV6oAFBM4HIMqx6pChC...",
   "session_secret_key": "3AtUcFU3JZCUXLLoAuBX",
   "api_server": "https://calls.okcdn.ru/",
-  "external_user_id": "3260455"
+  "external_user_id": "9000000000003"
 }
 ```
 
@@ -231,7 +231,7 @@ resp = requests.post("https://calls.okcdn.ru/fb.do", data={
 | `isVideo` | string | `"true"` или `"false"` |
 | `protocolVersion` | string | `"5"` |
 | `payload` | string | JSON-строка: `{"is_video": false}` |
-| `externalIds` | string | ID собеседника (например, `"6236697"`) |
+| `externalIds` | string | ID собеседника (например, `"9000000000002"`) |
 | `session_key` | string | Ключ сессии из `auth.anonymLogin` |
 
 **Пример запроса:**
@@ -244,7 +244,7 @@ resp = requests.post("https://calls.okcdn.ru/fb.do", data={
     "isVideo": "false",
     "protocolVersion": "5",
     "payload": json.dumps({"is_video": false}),
-    "externalIds": "6236697",
+    "externalIds": "9000000000002",
     "session_key": session_key,
 })
 ```
@@ -520,14 +520,14 @@ wss://videowebrtc.okcdn.ru/ws2?userId=910111054239&entityType=USER&conversationI
     "activityTimeout": 120000
   },
   "conversation": {
-    "id": "07A51A28-346C-46B4-BADE-1518ACD91036",
+    "id": "<uuid>",
     "state": "ACTIVE",
     "topology": "DIRECT",
     "participants": [
       {
         "externalId": {
           "type": "ONE_ME",
-          "id": "3260455"
+          "id": "9000000000003"
         },
         "state": "CALLED",
         "mediaSettings": {
@@ -538,7 +538,7 @@ wss://videowebrtc.okcdn.ru/ws2?userId=910111054239&entityType=USER&conversationI
       {
         "externalId": {
           "type": "ONE_ME",
-          "id": "307889134"
+          "id": "9000000000001"
         },
         "state": "ACCEPTED",
         "roles": ["CREATOR"],
@@ -1007,8 +1007,8 @@ t+0.016ms  ← error: conversation-ended (reason: HUNGUP)
     "state": "ACTIVE",
     "topology": "DIRECT",
     "participants": [
-      {"externalId": {"id": "3260455"}, "state": "ACCEPTED"},
-      {"externalId": {"id": "307889134"}, "state": "ACCEPTED", "roles": ["CREATOR"]}
+      {"externalId": {"id": "9000000000003"}, "state": "ACCEPTED"},
+      {"externalId": {"id": "9000000000001"}, "state": "ACCEPTED", "roles": ["CREATOR"]}
     ],
     "participantsLimit": 1500
   },
@@ -1054,8 +1054,8 @@ Push-уведомление о входящем звонке. Сервер от�
   "payload": {
     "vcp": "<protobuf+b64 signaling params>",
     "chatId": 0,
-    "conversationId": "07A51A28-346C-46B4-BADE-1518ACD91036",
-    "callerId": 307889134,
+    "conversationId": "<uuid>",
+    "callerId": 9000000000001,
     "type": "AUDIO",
     "isContact": true
   }
@@ -1147,8 +1147,8 @@ decoded = base64.b64decode(b64_clean)
 **Таймлайн из HAR (входящий звонок):**
 ```
 seq 21: SUBSCRIBE_CHAT(75) chatId=309052361      → response null
-seq 22: NOTIF_TYPING(129) userId=307889134        → typing indicator
-seq 23: NOTIF_INCOMING_CALL(137) callerId=307889134 → входящий звонок
+seq 22: NOTIF_TYPING(129) userId=9000000000001        → typing indicator
+seq 23: NOTIF_INCOMING_CALL(137) callerId=9000000000001 → входящий звонок
 ```
 
 Между SUBSCRIBE_CHAT и push 137 проходит ~40ms. После принятия звонка
@@ -1181,7 +1181,7 @@ WS #1 (ws-api.oneme.ru) — то же соединение, что и брауз
 
 ```python
 # INIT с browser deviceId — push 137 приходит
-device_id = "0a531fd8-6517-401a-990a-45fb6901a544"  # из web.max.ru
+device_id = "<device_uuid>"  # из web.max.ru
 send(6, {"deviceId": device_id, "userAgent": {
     "deviceType": "WEB", "pushDeviceType": "WEBPUSH",
     "deviceName": "Browser",
@@ -1206,7 +1206,7 @@ send(6, {"deviceId": device_id, "userAgent": {
 
 ```json
 {
-  "chatId": 7268926,
+  "chatId": 9000000000004,
   "count": 10
 }
 ```
@@ -1225,7 +1225,7 @@ send(6, {"deviceId": device_id, "userAgent": {
   "hasMore": true,
   "history": [
     {
-      "chatId": 7268926,
+      "chatId": 9000000000004,
       "message": { "...": "полный объект сообщения с CALL attaches" },
       "chatType": "DIALOG"
     }
@@ -1250,7 +1250,7 @@ send(6, {"deviceId": device_id, "userAgent": {
 **Назад (более старые):**
 ```json
 {
-  "chatId": 7268926,
+  "chatId": 9000000000004,
   "count": 3,
   "marker": 1763036952192
 }
@@ -1258,7 +1258,7 @@ send(6, {"deviceId": device_id, "userAgent": {
 или с явным direction:
 ```json
 {
-  "chatId": 7268926,
+  "chatId": 9000000000004,
   "count": 3,
   "marker": 1763036952192,
   "direction": "backward"
@@ -1268,7 +1268,7 @@ send(6, {"deviceId": device_id, "userAgent": {
 **Вперёд (более новые):**
 ```json
 {
-  "chatId": 7268926,
+  "chatId": 9000000000004,
   "count": 3,
   "marker": 1763041728128,
   "direction": "forward"
@@ -1313,7 +1313,7 @@ HTTP API, используйте `vchat.hangupConversation`.
 
 ```json
 {
-  "conversationId": "8daa66c0-04c1-4824-820b-67f92e6fd29d",
+  "conversationId": "<uuid>",
   "muteAudio": true,
   "muteVideo": false
 }
@@ -1398,7 +1398,7 @@ CallsServiceImpl.startActiveCall(
 - **`calleeIds` / `externalIds` / `userId` / `contactId`**: любое extra поле → `"Missing required parameter internalParams"` — меняет поведение парсера
 
 **Вывод:** CALL_START требует, чтобы текущий пользователь был участником
-чата. Наш access_token (от web.max.ru) не даёт прав участника чата 7268926,
+чата. Наш access_token (от web.max.ru) не даёт прав участника чата 9000000000004,
 поэтому звонок не привязывается. Официальный клиент использует этот опкод
 после startConversation для записи звонка в историю.
 
@@ -1415,7 +1415,7 @@ CallsServiceImpl.startActiveCall(
   "payload": {
     "events": [{
       "type": "CALL",
-      "userId": 3260455,
+      "userId": 9000000000003,
       "time": 1781893453263,
       "sessionId": 1781893446415,
       "event": "INCOMING_CALL_INIT",
@@ -1501,15 +1501,15 @@ POST https://calls.okcdn.ru/fb.do
 | `reach_status` | string | `"REACHED"`, `"MISSED"`, `"REJECTED"` |
 
 **Примечание:** user_id — это внутренний ID сессии звонков
-(910173589479), а не ID пользователя в MAX (3260455).
+(910173589479), а не ID пользователя в MAX (9000000000003).
 
 
 ## User ID mapping (из HAR)
 
 | Система | ID | Описание |
 |---------|----|----------|
-| MAX userId (свой) | 3260455 | Владелец сессии |
-| MAX userId (звонящий) | 307889134 | Кто звонит |
+| MAX userId (свой) | 9000000000003 | Владелец сессии |
+| MAX userId (звонящий) | 9000000000001 | Кто звонит |
 | Signaling user ID | 910111054239 | Внутренний ID для signaling (свой) |
 | Signaling tenant ID | 921564..922252 | Изменяется между звонками (префикс uid в vcp) |
 | Signaling participant ID (звонящий) | 1125899996294935 | ID звонящего в signaling |
@@ -1525,7 +1525,7 @@ POST https://calls.okcdn.ru/fb.do
 
 ```json
 {
-  "conversationId": "7268926_3260455"
+  "conversationId": "9000000000004_9000000000003"
 }
 ```
 
@@ -1557,7 +1557,7 @@ POST https://calls.okcdn.ru/fb.do
 
 ```json
 {
-  "chatId": 7268926,
+  "chatId": 9000000000004,
   "messageId": "0"
 }
 ```
